@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kegiatan Saya - Bertaut</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #edf7ff;
+            color: #073b9c;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        
+
+        /* MAIN */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 18px 28px 28px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            margin-bottom: 25px;
+        }
+
+        .search-box {
+            flex: 1;
+            height: 52px;
+            background: #dceaff;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 22px;
+            color: #7392c5;
+            font-size: 13px;
+        }
+
+        .search-icon {
+            font-size: 25px;
+            color: #073b9c;
+        }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .bell {
+            font-size: 29px;
+            position: relative;
+        }
+
+        .bell::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #ff7188;
+            border-radius: 50%;
+            top: 1px;
+            right: -1px;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-photo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ffd75d;
+        }
+
+        .profile-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #073b9c;
+        }
+
+        .profile-role {
+            font-size: 12px;
+            color: #5275b8;
+        }
+
+        .profile-arrow {
+            font-size: 22px;
+            margin-left: 15px;
+        }
+
+        /* PAGE HEADER */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            min-height: 180px;
+            padding: 8px 15px 15px;
+            overflow: hidden;
+        }
+
+        .page-title-area {
+            max-width: 650px;
+        }
+
+        .page-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 43px;
+            font-weight: 800;
+            color: #073b9c;
+            letter-spacing: -1px;
+        }
+
+        .calendar-icon {
+            font-size: 56px;
+        }
+
+        .page-description {
+            margin-top: 12px;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #3970c5;
+        }
+
+        .header-illustration {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            padding-right: 25px;
+        }
+
+        .header-note {
+            font-size: 18px;
+            color: #2455ad;
+            font-weight: 600;
+            line-height: 1.4;
+            transform: rotate(-7deg);
+            max-width: 150px;
+        }
+
+        .header-person {
+            font-size: 130px;
+            line-height: 1;
+        }
+
+        /* CONTENT PANEL */
+        .content-panel {
+            background: #fff4d8;
+            border-radius: 24px;
+            padding: 18px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            flex: 0 1 310px;
+            text-align: center;
+            padding: 15px 20px;
+            border-radius: 12px;
+            background: #ded7ff;
+            color: #5935db;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .tab.active {
+            background: linear-gradient(90deg, #8660ed, #7150df);
+            color: white;
+        }
+
+        .section {
+            margin-bottom: 26px;
+        }
+
+        .section-title {
+            font-size: 25px;
+            font-weight: 800;
+            color: #073b9c;
+            margin-bottom: 5px;
+        }
+
+        .section-description {
+            color: #3970c5;
+            font-size: 13px;
+            margin-bottom: 17px;
+        }
+
+        /* GRID KARTU */
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 17px;
+        }
+
+        .activity-card {
+            background: white;
+            border-radius: 18px;
+            padding: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 4px 0 rgba(31, 91, 177, .04);
+        }
+
+        .activity-image-wrapper {
+            position: relative;
+        }
+
+        .activity-image {
+            width: 100%;
+            height: 145px;
+            object-fit: cover;
+            border-radius: 13px;
+            display: block;
+        }
+
+        .heart {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            color: #ff7190;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        .category {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 5px 13px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .category.green {
+            background: #c6f5df;
+            color: #008b68;
+        }
+
+        .category.purple {
+            background: #dcd2ff;
+            color: #6241d5;
+        }
+
+        .category.blue {
+            background: #cfe5ff;
+            color: #145bc0;
+        }
+
+        .category.yellow {
+            background: #ffe18a;
+            color: #a36b00;
+        }
+
+        .category.pink {
+            background: #ffd2e6;
+            color: #d83d80;
+        }
+
+        .activity-title {
+            color: #073b9c;
+            font-size: 15px;
+            font-weight: 800;
+            line-height: 1.4;
+            margin-top: 8px;
+            min-height: 42px;
+        }
+
+        .activity-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            color: #3970c5;
+            font-size: 12px;
+            margin-top: 8px;
+            line-height: 1.4;
+        }
+
+        .activity-info span:first-child {
+            width: 17px;
+            flex-shrink: 0;
+        }
+
+        .status {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status.registered {
+            background: #c8f5df;
+            color: #008866;
+        }
+
+        .status.scheduled {
+            background: #cfe5ff;
+            color: #145bc0;
+        }
+
+        .status.ongoing {
+            background: #ffe18a;
+            color: #a36b00;
+        }
+
+        .status.created {
+            background: #ffd2e6;
+            color: #d83d80;
+        }
+
+        /* FOOTER BANNER */
+        .footer-banner {
+            margin-top: 24px;
+            background: linear-gradient(90deg, #ffb6d7, #ffc7e2);
+            border-radius: 20px;
+            padding: 23px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .footer-text {
+            color: #073b9c;
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .create-button {
+            text-decoration: none;
+            background: #0647ad;
+            color: white;
+            padding: 15px 24px;
+            border-radius: 28px;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .create-button:hover {
+            background: #052f78;
+        }
+
+        /* RESPONSIVE TABLET */
+        @media (max-width: 1150px) {
+            
+
+            .main-content {
+                padding: 18px;
+            }
+
+            .page-title {
+                font-size: 35px;
+            }
+
+            .header-person {
+                font-size: 95px;
+            }
+
+            .header-note {
+                font-size: 14px;
+            }
+
+            .activities-grid {
+                gap: 12px;
+            }
+
+            .activity-image {
+                height: 125px;
+            }
+        }
+
+        /* RESPONSIVE HP */
+        @media (max-width: 800px) {
+            .app-container {
+                display: block;
+            }
+
+            
+
+            .main-content {
+                padding: 12px;
+            }
+
+            .topbar {
+                gap: 8px;
+            }
+
+            .search-box {
+                height: 43px;
+                padding: 0 12px;
+                font-size: 10px;
+            }
+
+            .topbar-right {
+                gap: 8px;
+            }
+
+            .bell {
+                font-size: 23px;
+            }
+
+            .profile-photo {
+                width: 37px;
+                height: 37px;
+            }
+
+            .profile-name,
+            .profile-role,
+            .profile-arrow {
+                display: none;
+            }
+
+            .page-header {
+                min-height: auto;
+                padding: 12px 5px 20px;
+            }
+
+            .page-title {
+                font-size: 28px;
+                gap: 8px;
+                letter-spacing: -.5px;
+            }
+
+            .calendar-icon {
+                font-size: 34px;
+            }
+
+            .page-description {
+                font-size: 11px;
+                line-height: 1.6;
+                margin-top: 7px;
+            }
+
+            .header-illustration {
+                padding-right: 0;
+                gap: 3px;
+            }
+
+            .header-note {
+                display: none;
+            }
+
+            .header-person {
+                font-size: 65px;
+            }
+
+            .content-panel {
+                padding: 10px;
+                border-radius: 18px;
+            }
+
+            .tabs {
+                gap: 5px;
+            }
+
+            .tab {
+                flex: 1;
+                padding: 11px 5px;
+                font-size: 10px;
+            }
+
+            .section-title {
+                font-size: 18px;
+            }
+
+            .section-description {
+                font-size: 10px;
+                margin-bottom: 12px;
+            }
+
+            .activities-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 10px;
+            }
+
+            .activity-card {
+                padding: 8px;
+                border-radius: 13px;
+            }
+
+            .activity-image {
+                height: 100px;
+                border-radius: 9px;
+            }
+
+            .heart {
+                width: 27px;
+                height: 27px;
+                font-size: 16px;
+                top: 6px;
+                right: 6px;
+            }
+
+            .category {
+                font-size: 9px;
+                padding: 4px 8px;
+                margin-top: 7px;
+            }
+
+            .activity-title {
+                font-size: 11px;
+                min-height: 32px;
+            }
+
+            .activity-info {
+                font-size: 9px;
+                gap: 4px;
+                margin-top: 5px;
+            }
+
+            .status {
+                font-size: 9px;
+                padding: 6px 8px;
+                margin-top: 9px;
+            }
+
+            .footer-banner {
+                padding: 15px;
+                flex-direction: column;
+                align-items: stretch;
+                text-align: center;
+            }
+
+            .footer-text {
+                font-size: 14px;
+            }
+
+            .create-button {
+                text-align: center;
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 430px) {
+            .menu {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .menu-item:nth-child(5),
+            .menu-item:nth-child(6),
+            .menu-item:nth-child(7),
+            .menu-item:nth-child(8) {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 23px;
+            }
+
+            .header-person {
+                font-size: 52px;
+            }
+
+            .activities-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .activity-image {
+                height: 85px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="app-container">
+
+     @include('layouts.sidebar')
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <div class="topbar">
+
+            <div class="search-box">
+                <span class="search-icon">⌕</span>
+                <span>Cari kegiatan, komunitas, atau lokasi...</span>
+            </div>
+
+            <div class="topbar-right">
+                <div class="bell">♧</div>
+
+                <div class="profile">
+                    <img
+                        class="profile-photo"
+                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"
+                        alt="Foto profil">
+
+                    <div>
+                        <div class="profile-name">Hai, Salsabila!</div>
+                        <div class="profile-role">Volunteer</div>
+                    </div>
+
+                    <div class="profile-arrow">⌄</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- HEADER HALAMAN -->
+        <section class="page-header">
+
+            <div class="page-title-area">
+                <h1 class="page-title">
+                    <span class="calendar-icon">▣</span>
+                    Kegiatan Saya
+                </h1>
+
+                <p class="page-description">
+                    Semua kegiatan yang kamu ikuti maupun yang kamu buat,
+                    ada di sini. Teruslah berkontribusi, karena setiap aksi berarti!
+                </p>
+            </div>
+
+            <div class="header-illustration">
+                <div class="header-note">
+                    Setiap aksi kecil<br>
+                    selalu berarti 💗
+                </div>
+
+                <div class="header-person">👩🏻‍🌾</div>
+            </div>
+
+        </section>
+
+        <!-- CONTENT -->
+        <section class="content-panel">
+
+            <div class="tabs">
+                <div class="tab active">Kegiatan yang Diikuti</div>
+                <div class="tab">Kegiatan yang Saya Buat</div>
+            </div>
+
+            <!-- KEGIATAN YANG DIIKUTI -->
+            <div class="section">
+
+                <h2 class="section-title">Kegiatan yang Diikuti</h2>
+
+                <p class="section-description">
+                    Berikut adalah kegiatan yang sudah kamu ikuti.
+                </p>
+
+                <div class="activities-grid">
+
+                    <div class="activity-card">
+                        <div class="activity-image-wrapper">
+                            <img
+                                class="activity-image"
+                                src="https://images.unsplash.com/photo-1599685315640-7c9c5c6e4c4e?w=600"
+                                alt="Menanam pohon">
+
+                            <div class="heart">♡</div>
+                        </div>
+
+                        <span class="category green">Lingkungan</span>
+
+                        <h3 class="activity-title">
+                            Aksi Tanam Pohon untuk Bumi
+                        </h3>
+
+                        <div class="activity-info">
+                            <span>▣</span>
+                            <span>24 Sep 2026</span>
+                        </div>
+
+                        <div class="activity-info">
+                            <span>⌖</span>
+                            <span>Taman Kota Palembang</span>
+                        </div>
+
+                        <span class="status registered">
+                            Sudah Terdaftar
+                        </span>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-image-wrapper">
+                            <img
+                                class="activity-image"
+                                src="https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=600"
+                                alt="Bersih-bersih pantai">
+
+                            <div class="heart">♡</div>
+                        </div>
+
+                        <span class="category purple">Sosial</span>
+
+                        <h3 class="activity-title">
+                            Bersih-Bersih Pantai
+                        </h3>
+
+                        <div class="activity-info">
+                            <span>▣</span>
+                            <span>25 Sep 2026</span>
+                        </div>
+
+                        <div class="activity-info">
+                            <span>⌖</span>
+                            <span>Pantai Pasir Putih</span>
+                        </div>
+
+                        <span class="status scheduled">
+                            Akan Dilaksanakan
+                        </span>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-image-wrapper">
+                            <img
+                                class="activity-image"
+                                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600"
+                                alt="Donasi buku">
+
+                            <div class="heart">♡</div>
+                        </div>
+
+                        <span class="category blue">Pendidikan</span>
+
+                        <h3 class="activity-title">
+                            Donasi Buku untuk Anak
+                        </h3>
+
+                        <div class="activity-info">
+                            <span>▣</span>
+                            <span>30 Sep 2026</span>
+                        </div>
+
+                        <div class="activity-info">
+                            <span>⌖</span>
+                            <span>Panti Asuhan Harapan</span>
+                        </div>
+
+                        <span class="status ongoing">
+                            Sedang Berlangsung
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- KEGIATAN YANG DIBUAT -->
+            <div class="section">
+
+                <h2 class="section-title">Kegiatan yang Saya Buat</h2>
+
+                <p class="section-description">
+                    Berikut adalah kegiatan yang kamu buat sendiri.
+                </p>
+
+                <div class="activities-grid">
+
+                    <div class="activity-card">
+                        <div class="activity-image-wrapper">
+                            <img
+                                class="activity-image"
+                                src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=600"
+                                alt="Bantu hewan terlantar">
+
+                            <div class="heart">♡</div>
+                        </div>
+
+                        <span class="category yellow">Hewan</span>
+
+                        <h3 class="activity-title">
+                            Bantu Hewan Terlantar
+                        </h3>
+
+                        <div class="activity-info">
+                            <span>▣</span>
+                            <span>28 Sep 2026</span>
+                        </div>
+
+                        <div class="activity-info">
+                            <span>⌖</span>
+                            <span>Shelter Hewan Palembang</span>
+                        </div>
+
+                        <span class="status created">
+                            Dibuat oleh Saya
+                        </span>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-image-wrapper">
+                            <img
+                                class="activity-image"
+                                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600"
+                                alt="Kelas ceria">
+
+                            <div class="heart">♡</div>
+                        </div>
+
+                        <span class="category blue">Pendidikan</span>
+
+                        <h3 class="activity-title">
+                            Kelas Ceria untuk Anak Negeri
+                        </h3>
+
+                        <div class="activity-info">
+                            <span>▣</span>
+                            <span>1 Okt 2026</span>
+                        </div>
+
+                        <div class="activity-info">
+                            <span>⌖</span>
+                            <span>SDN 12 Palembang</span>
+                        </div>
+
+                        <span class="status created">
+                            Dibuat oleh Saya
+                        </span>
+                    </div>
+
+                    <div class="activity-card">
+                        <div class="activity-image-wrapper">
+                            <img
+                                class="activity-image"
+                                src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=600"
+                                alt="Berbagi makanan">
+
+                            <div class="heart">♡</div>
+                        </div>
+
+                        <span class="category pink">Sosial</span>
+
+                        <h3 class="activity-title">
+                            Berbagi Makanan untuk Sesama
+                        </h3>
+
+                        <div class="activity-info">
+                            <span>▣</span>
+                            <span>5 Okt 2026</span>
+                        </div>
+
+                        <div class="activity-info">
+                            <span>⌖</span>
+                            <span>Masjid Al-Hikmah</span>
+                        </div>
+
+                        <span class="status created">
+                            Dibuat oleh Saya
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+        <!-- FOOTER BANNER -->
+        <div class="footer-banner">
+            <div class="footer-text">
+                ☀️ Bersama, kita bisa<br>
+                menciptakan dunia yang lebih baik 💗
+            </div>
+
+            <a href="{{ url('/buat-kegiatan') }}" class="create-button">
+                Buat Kegiatan Baru →
+            </a>
+        </div>
+
+    </main>
+</div>
+</body>
+</html>
