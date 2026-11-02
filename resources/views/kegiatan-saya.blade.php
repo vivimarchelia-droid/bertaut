@@ -98,6 +98,16 @@
             background: #ffd75d;
         }
 
+        .profile-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #ffd75d;
+            color: #073b9c;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
         .profile-name {
             font-size: 14px;
             font-weight: 700;
@@ -197,6 +207,20 @@
         .tab.active {
             background: linear-gradient(90deg, #8660ed, #7150df);
             color: white;
+        }
+
+        .tab {
+            border: none;
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .section {
@@ -346,6 +370,38 @@
             color: #d83d80;
         }
 
+        .empty-state {
+            grid-column: 1 / -1;
+            background: #ffffff;
+            border: 2px dashed #c7dafa;
+            border-radius: 18px;
+            padding: 34px 20px;
+            text-align: center;
+            color: #3970c5;
+        }
+
+        .empty-icon {
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state h3 {
+            color: #073b9c;
+            font-size: 17px;
+            margin-bottom: 7px;
+        }
+
+        .empty-state p {
+            font-size: 12px;
+            line-height: 1.7;
+            margin: 0 auto 16px;
+            max-width: 480px;
+        }
+
+        .empty-state .create-button {
+            display: inline-block;
+        }
+
         /* FOOTER BANNER */
         .footer-banner {
             margin-top: 24px;
@@ -378,6 +434,23 @@
 
         .create-button:hover {
             background: #052f78;
+        }
+
+        .manage-button {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 9px 14px;
+            border-radius: 20px;
+            background: #dceaff;
+            color: #073b9c;
+            text-decoration: none;
+            font-size: 11px;
+            font-weight: 700;
+            transition: .2s ease;
+        }
+
+        .manage-button:hover {
+            background: #c5dcff;
         }
 
         /* RESPONSIVE TABLET */
@@ -622,13 +695,19 @@
                 <div class="bell">♧</div>
 
                 <div class="profile">
-                    <img
-                        class="profile-photo"
-                        src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100"
-                        alt="Foto profil">
+                    @if (auth()->user()->profile_photo)
+    <img
+        class="profile-photo"
+        src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
+        alt="Foto profil">
+@else
+    <div class="profile-photo profile-placeholder">
+        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+    </div>
+@endif
 
                     <div>
-                        <div class="profile-name">Hai, Salsabila!</div>
+                        <div class="profile-name">Hai, {{ auth()->user()->name }}!</div>
                         <div class="profile-role">Volunteer</div>
                     </div>
 
@@ -668,12 +747,16 @@
         <section class="content-panel">
 
             <div class="tabs">
-                <div class="tab active">Kegiatan yang Diikuti</div>
-                <div class="tab">Kegiatan yang Saya Buat</div>
+                <button type="button" class="tab active" data-tab="diikuti">
+                    Kegiatan yang Diikuti
+                </button>
+                <button type="button" class="tab" data-tab="dibuat">
+                    Kegiatan yang Saya Buat
+                </button>
             </div>
 
             <!-- KEGIATAN YANG DIIKUTI -->
-            <div class="section">
+            <div class="section tab-content active" id="section-diikuti">
 
                 <h2 class="section-title">Kegiatan yang Diikuti</h2>
 
@@ -683,104 +766,63 @@
 
                 <div class="activities-grid">
 
-                    <div class="activity-card">
-                        <div class="activity-image-wrapper">
-                            <img
-                                class="activity-image"
-                                src="https://images.unsplash.com/photo-1599685315640-7c9c5c6e4c4e?w=600"
-                                alt="Menanam pohon">
+                    @forelse ($kegiatanDiikuti as $kegiatan)
+                        @php
+                            $categoryClass = match (strtolower($kegiatan->kategori)) {
+                                'lingkungan' => 'green',
+                                'sosial' => 'purple',
+                                'pendidikan' => 'blue',
+                                'hewan' => 'yellow',
+                                default => 'pink',
+                            };
+                        @endphp
 
-                            <div class="heart">♡</div>
+                        <div class="activity-card">
+                            <div class="activity-image-wrapper">
+                                <img
+                                    class="activity-image"
+                                    src="{{ $kegiatan->foto ? asset('storage/' . $kegiatan->foto) : 'https://images.unsplash.com/photo-1599685315640-7c9c5c6e4c4e?w=600' }}"
+                                    alt="{{ $kegiatan->judul }}">
+
+                                <div class="heart">♡</div>
+                            </div>
+
+                            <span class="category {{ $categoryClass }}">
+                                {{ $kegiatan->kategori }}
+                            </span>
+
+                            <h3 class="activity-title">
+                                {{ $kegiatan->judul }}
+                            </h3>
+
+                            <div class="activity-info">
+                                <span>▣</span>
+                                <span>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d M Y') }}</span>
+                            </div>
+
+                            <div class="activity-info">
+                                <span>⌖</span>
+                                <span>{{ $kegiatan->lokasi }}</span>
+                            </div>
+
+                            <span class="status registered">
+                                Sudah Terdaftar
+                            </span>
                         </div>
-
-                        <span class="category green">Lingkungan</span>
-
-                        <h3 class="activity-title">
-                            Aksi Tanam Pohon untuk Bumi
-                        </h3>
-
-                        <div class="activity-info">
-                            <span>▣</span>
-                            <span>24 Sep 2026</span>
+                    @empty
+                        <div class="empty-state">
+                            <div class="empty-icon">🌱</div>
+                            <h3>Belum Ada Kegiatan</h3>
+                            <p>Kamu belum bergabung dengan kegiatan apa pun. Yuk, temukan kegiatan dan mulai berkontribusi!</p>
+                            <a href="{{ route('kegiatan') }}" class="create-button">Jelajahi Kegiatan →</a>
                         </div>
-
-                        <div class="activity-info">
-                            <span>⌖</span>
-                            <span>Taman Kota Palembang</span>
-                        </div>
-
-                        <span class="status registered">
-                            Sudah Terdaftar
-                        </span>
-                    </div>
-
-                    <div class="activity-card">
-                        <div class="activity-image-wrapper">
-                            <img
-                                class="activity-image"
-                                src="https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=600"
-                                alt="Bersih-bersih pantai">
-
-                            <div class="heart">♡</div>
-                        </div>
-
-                        <span class="category purple">Sosial</span>
-
-                        <h3 class="activity-title">
-                            Bersih-Bersih Pantai
-                        </h3>
-
-                        <div class="activity-info">
-                            <span>▣</span>
-                            <span>25 Sep 2026</span>
-                        </div>
-
-                        <div class="activity-info">
-                            <span>⌖</span>
-                            <span>Pantai Pasir Putih</span>
-                        </div>
-
-                        <span class="status scheduled">
-                            Akan Dilaksanakan
-                        </span>
-                    </div>
-
-                    <div class="activity-card">
-                        <div class="activity-image-wrapper">
-                            <img
-                                class="activity-image"
-                                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600"
-                                alt="Donasi buku">
-
-                            <div class="heart">♡</div>
-                        </div>
-
-                        <span class="category blue">Pendidikan</span>
-
-                        <h3 class="activity-title">
-                            Donasi Buku untuk Anak
-                        </h3>
-
-                        <div class="activity-info">
-                            <span>▣</span>
-                            <span>30 Sep 2026</span>
-                        </div>
-
-                        <div class="activity-info">
-                            <span>⌖</span>
-                            <span>Panti Asuhan Harapan</span>
-                        </div>
-
-                        <span class="status ongoing">
-                            Sedang Berlangsung
-                        </span>
-                    </div>
+                    @endforelse
 
                 </div>
             </div>
 
             <!-- KEGIATAN YANG DIBUAT -->
-            <div class="section">
+            <div class="section tab-content" id="section-dibuat">
 
                 <h2 class="section-title">Kegiatan yang Saya Buat</h2>
 
@@ -790,98 +832,61 @@
 
                 <div class="activities-grid">
 
-                    <div class="activity-card">
-                        <div class="activity-image-wrapper">
-                            <img
-                                class="activity-image"
-                                src="https://images.unsplash.com/photo-1558788353-f76d92427f16?w=600"
-                                alt="Bantu hewan terlantar">
+                    @forelse ($kegiatanDibuat as $kegiatan)
+                        @php
+                            $categoryClass = match (strtolower($kegiatan->kategori)) {
+                                'lingkungan' => 'green',
+                                'sosial' => 'purple',
+                                'pendidikan' => 'blue',
+                                'hewan' => 'yellow',
+                                default => 'pink',
+                            };
+                        @endphp
 
-                            <div class="heart">♡</div>
+                        <div class="activity-card">
+                            <div class="activity-image-wrapper">
+                                <img
+                                    class="activity-image"
+                                    src="{{ $kegiatan->foto ? asset('storage/' . $kegiatan->foto) : 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=600' }}"
+                                    alt="{{ $kegiatan->judul }}">
+
+                                <div class="heart">♡</div>
+                            </div>
+
+                            <span class="category {{ $categoryClass }}">
+                                {{ $kegiatan->kategori }}
+                            </span>
+
+                            <h3 class="activity-title">
+                                {{ $kegiatan->judul }}
+                            </h3>
+
+                            <div class="activity-info">
+                                <span>▣</span>
+                                <span>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d M Y') }}</span>
+                            </div>
+
+                            <div class="activity-info">
+                                <span>⌖</span>
+                                <span>{{ $kegiatan->lokasi }}</span>
+                            </div>
+
+                            <span class="status created">
+                                Dibuat oleh Saya
+                            </span>
+
+                            <a href="{{ route('kegiatan.peserta', $kegiatan->id) }}" class="manage-button">
+                                Kelola Peserta →
+                            </a>
                         </div>
-
-                        <span class="category yellow">Hewan</span>
-
-                        <h3 class="activity-title">
-                            Bantu Hewan Terlantar
-                        </h3>
-
-                        <div class="activity-info">
-                            <span>▣</span>
-                            <span>28 Sep 2026</span>
+                    @empty
+                        <div class="empty-state">
+                            <div class="empty-icon">💗</div>
+                            <h3>Belum Ada Kegiatan yang Dibuat</h3>
+                            <p>Kamu belum membuat kegiatan sendiri. Ayo buat kegiatan dan ajak orang lain berbuat kebaikan!</p>
+                            <a href="{{ route('buat-kegiatan') }}" class="create-button">Buat Kegiatan →</a>
                         </div>
-
-                        <div class="activity-info">
-                            <span>⌖</span>
-                            <span>Shelter Hewan Palembang</span>
-                        </div>
-
-                        <span class="status created">
-                            Dibuat oleh Saya
-                        </span>
-                    </div>
-
-                    <div class="activity-card">
-                        <div class="activity-image-wrapper">
-                            <img
-                                class="activity-image"
-                                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600"
-                                alt="Kelas ceria">
-
-                            <div class="heart">♡</div>
-                        </div>
-
-                        <span class="category blue">Pendidikan</span>
-
-                        <h3 class="activity-title">
-                            Kelas Ceria untuk Anak Negeri
-                        </h3>
-
-                        <div class="activity-info">
-                            <span>▣</span>
-                            <span>1 Okt 2026</span>
-                        </div>
-
-                        <div class="activity-info">
-                            <span>⌖</span>
-                            <span>SDN 12 Palembang</span>
-                        </div>
-
-                        <span class="status created">
-                            Dibuat oleh Saya
-                        </span>
-                    </div>
-
-                    <div class="activity-card">
-                        <div class="activity-image-wrapper">
-                            <img
-                                class="activity-image"
-                                src="https://images.unsplash.com/photo-1593113646773-028c64a8f1b8?w=600"
-                                alt="Berbagi makanan">
-
-                            <div class="heart">♡</div>
-                        </div>
-
-                        <span class="category pink">Sosial</span>
-
-                        <h3 class="activity-title">
-                            Berbagi Makanan untuk Sesama
-                        </h3>
-
-                        <div class="activity-info">
-                            <span>▣</span>
-                            <span>5 Okt 2026</span>
-                        </div>
-
-                        <div class="activity-info">
-                            <span>⌖</span>
-                            <span>Masjid Al-Hikmah</span>
-                        </div>
-
-                        <span class="status created">
-                            Dibuat oleh Saya
-                        </span>
-                    </div>
+                    @endforelse
 
                 </div>
             </div>
@@ -902,5 +907,31 @@
 
     </main>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const tabButtons = document.querySelectorAll('.tab[data-tab]');
+        const tabSections = {
+            diikuti: document.getElementById('section-diikuti'),
+            dibuat: document.getElementById('section-dibuat')
+        };
+
+        tabButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                const selected = button.dataset.tab;
+
+                tabButtons.forEach(function (tab) {
+                    tab.classList.toggle('active', tab === button);
+                });
+
+                Object.entries(tabSections).forEach(function ([key, section]) {
+                    if (section) {
+                        section.classList.toggle('active', key === selected);
+                    }
+                });
+            });
+        });
+    });
+</script>
+
 </body>
 </html>

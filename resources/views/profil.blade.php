@@ -91,7 +91,7 @@
             align-items: center;
             gap: 20px;
 
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
 
         .profile-search {
@@ -192,7 +192,7 @@
             align-items: center;
             justify-content: space-between;
 
-            margin-bottom: 25px;
+            margin-bottom: 12px;
             padding: 0 5px;
         }
 
@@ -243,13 +243,13 @@
 
         .profile-heading-note {
             width: 245px;
-            min-height: 105px;
+            min-height: 85px;
 
             display: flex;
             align-items: center;
             justify-content: center;
 
-            padding: 15px 25px;
+            padding: 10px 22px;
 
             background: #ffeaa9;
             border-radius: 45% 55% 48% 52%;
@@ -302,66 +302,74 @@
             display: flex;
             align-items: center;
             justify-content: center;
-
             padding: 28px;
         }
 
-        .profile-photo {
-            width: 190px;
-            height: 190px;
-
-            border-radius: 50%;
-
-            background: #ffb7d0;
-
-            overflow: hidden;
-
+        /* Wrapper terpisah supaya tombol kamera tidak terpotong lingkaran foto. */
+        .profile-photo-wrap {
             position: relative;
+            width: 210px;
+            height: 210px;
+            flex: 0 0 210px;
+        }
 
+        .profile-photo {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #ffb7d0;
+            overflow: hidden;
             border: 8px solid #fff;
-
-            box-shadow:
-                0 5px 18px rgba(0,0,0,.08);
+            box-shadow: 0 5px 18px rgba(0,0,0,.08);
         }
 
         .profile-photo img {
+            display: block;
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center;
         }
 
         .profile-photo-placeholder {
             width: 100%;
             height: 100%;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
             font-size: 75px;
         }
 
         .camera-button {
             position: absolute;
-
-            right: 2px;
-            bottom: 8px;
-
-            width: 48px;
-            height: 48px;
-
+            right: 5px;
+            bottom: 7px;
+            z-index: 2;
+            width: 46px;
+            height: 46px;
+            padding: 0;
             border-radius: 50%;
-
             background: #258df0;
             color: #fff;
-
             display: flex;
             align-items: center;
             justify-content: center;
-
-            font-size: 22px;
-
+            font-size: 20px;
+            line-height: 1;
             border: 4px solid #fff;
+            box-shadow: 0 3px 10px rgba(7,59,145,.20);
+            cursor: pointer;
+            transition: transform .18s ease, background .18s ease;
+        }
+
+        .camera-button:hover {
+            background: #1268d4;
+            transform: scale(1.06);
+        }
+
+        .camera-button:focus-visible {
+            outline: 3px solid rgba(37,141,240,.35);
+            outline-offset: 3px;
         }
 
 
@@ -697,6 +705,32 @@
             font-weight: 500;
         }
 
+        .account-action {
+            width: 100%;
+            font: inherit;
+            color: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        button.account-action {
+            border-top: 0;
+            border-left: 0;
+            border-right: 0;
+        }
+
+        .account-action:hover {
+            background-color: #f3f7ff;
+        }
+
+        .account-logout-form {
+            width: 100%;
+        }
+
+        .account-logout-form .account-logout {
+            border: 0;
+        }
+
 
         /* =========================================================
            BACKGROUND DECORATION
@@ -839,12 +873,21 @@
             }
 
             .profile-photo-section {
-                padding-bottom: 5px;
+                padding: 18px 15px 5px;
             }
 
-            .profile-photo {
-                width: 155px;
-                height: 155px;
+            .profile-photo-wrap {
+                width: 165px;
+                height: 165px;
+                flex-basis: 165px;
+            }
+
+            .camera-button {
+                width: 42px;
+                height: 42px;
+                right: 3px;
+                bottom: 5px;
+                font-size: 18px;
             }
 
             .profile-information {
@@ -889,11 +932,199 @@
             }
         }
 
+
+        /* =========================================================
+           MODAL EDIT PROFIL
+        ========================================================= */
+        .profile-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            padding: 20px;
+            background: rgba(7, 35, 82, .45);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-modal.active {
+            display: flex;
+        }
+
+        .profile-modal-content {
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            background: #fff;
+            border-radius: 22px;
+            box-shadow: 0 15px 45px rgba(7, 59, 145, .18);
+        }
+
+        .profile-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .profile-modal-title {
+            color: #073b91;
+            font-size: 23px;
+            font-weight: 700;
+        }
+
+        .profile-modal-close {
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 50%;
+            background: #eaf3ff;
+            color: #1268d4;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .profile-form-group {
+            margin-bottom: 16px;
+        }
+
+        .profile-form-group label {
+            display: block;
+            margin-bottom: 7px;
+            color: #174e9d;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .profile-form-control {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #dce8f8;
+            border-radius: 11px;
+            outline: none;
+            color: #073b91;
+            background: #fbfdff;
+            font: inherit;
+            font-size: 13px;
+        }
+
+        .profile-form-control:focus {
+            border-color: #258df0;
+            box-shadow: 0 0 0 3px rgba(37, 141, 240, .10);
+        }
+
+        .profile-form-group textarea {
+            min-height: 105px;
+            resize: vertical;
+        }
+
+        .profile-form-error {
+            margin-top: 5px;
+            color: #dc3545;
+            font-size: 11px;
+        }
+
+        .profile-modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 22px;
+        }
+
+        .profile-modal-actions button {
+            padding: 11px 19px;
+            border-radius: 22px;
+            font: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .profile-cancel-button {
+            border: 1px solid #dce8f8;
+            color: #174e9d;
+            background: #fff;
+        }
+
+        .profile-save-button {
+            border: 1px solid #258df0;
+            color: #fff;
+            background: #258df0;
+        }
+
+        .profile-alert {
+            margin-bottom: 18px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 13px;
+        }
+
+        .profile-alert-success {
+            color: #176b43;
+            background: #e5f7ed;
+        }
+
+        .profile-alert-error {
+            color: #a52834;
+            background: #fdebed;
+        }
+
+        .profile-photo-preview {
+            display: block;
+            width: 82px;
+            height: 82px;
+            margin-bottom: 10px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #eaf3ff;
+        }
+
+        @media (max-width: 600px) {
+            .profile-modal-content {
+                padding: 22px 18px;
+            }
+
+            .profile-modal-title {
+                font-size: 20px;
+            }
+        }
+
+        .profile-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+}
+
+.profile-search input {
+    width: 100%;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    appearance: none;
+    font-family: inherit;
+    font-size: inherit;
+    color: inherit;
+}
+
+.profile-search input::placeholder {
+    color: inherit;
+    opacity: 0.8;
+}
+
     </style>
 </head>
 
 
 <body>
+
+    @php($user = Auth::user())
 
     <div class="profile-wrapper">
 
@@ -907,6 +1138,15 @@
 
         <main class="profile-main">
 
+            @if(session('success'))
+                <div class="profile-alert profile-alert-success">{{ session('success') }}</div>
+            @endif
+
+            @if($errors->any())
+                <div class="profile-alert profile-alert-error">
+                    Periksa kembali data yang dimasukkan. Ada bagian yang belum sesuai.
+                </div>
+            @endif
 
             <!-- =================================================
                  TOPBAR
@@ -914,22 +1154,31 @@
 
             <header class="profile-topbar">
 
-                <div class="profile-search">
-                    <span class="profile-search-icon">⌕</span>
-                    <span>Cari kegiatan, komunitas, atau lokasi...</span>
-                </div>
+                <form action="{{ route('kegiatan') }}" method="GET" class="profile-search">
+    <span class="profile-search-icon">⌕</span>
+
+    <input
+        type="text"
+        name="q"
+        placeholder="Cari kegiatan, komunitas, atau lokasi..."
+    >
+</form>
 
 
                 <div class="profile-user">
 
                     <div class="profile-user-photo">
-                        <span>👩🏻</span>
+                        @if($user && $user->profile_photo)
+                            <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Foto profil">
+                        @else
+                            <span>👩🏻</span>
+                        @endif
                     </div>
 
                     <div class="profile-user-info">
 
                         <div class="profile-user-name">
-                            Hai, {{ Auth::user()->name ?? 'Vivi Marchelia' }}!
+                            Hai, {{ $user->name ?? 'Pengguna Bertaut' }}!
                         </div>
 
                         <div class="profile-user-role">
@@ -989,16 +1238,18 @@
 
                 <div class="profile-photo-section">
 
-                    <div class="profile-photo">
-
-                        <div class="profile-photo-placeholder">
-                            👩🏻
+                    <div class="profile-photo-wrap">
+                        <div class="profile-photo">
+                            @if($user && $user->profile_photo)
+                                <img src="{{ asset('storage/' . $user->profile_photo) }}" alt="Foto profil">
+                            @else
+                                <div class="profile-photo-placeholder">👩🏻</div>
+                            @endif
                         </div>
 
-                        <div class="camera-button">
+                        <button type="button" class="camera-button" id="openEditProfile" aria-label="Ganti foto profil" title="Ganti foto profil">
                             📷
-                        </div>
-
+                        </button>
                     </div>
 
                 </div>
@@ -1010,7 +1261,7 @@
                 <div class="profile-information">
 
                     <h2 class="profile-name">
-                        {{ Auth::user()->name ?? 'Vivi Marchelia' }}
+                        {{ $user->name ?? 'Pengguna Bertaut' }}
                     </h2>
 
 
@@ -1031,21 +1282,21 @@
                         <div class="profile-detail">
                             <span class="detail-icon">✉</span>
                             <span>
-                                {{ Auth::user()->email ?? 'vivi.marchelia@example.com' }}
+                                {{ $user->email ?? '-' }}
                             </span>
                         </div>
 
                         <div class="profile-detail">
                             <span class="detail-icon">⌖</span>
                             <span>
-                                Jakarta, Indonesia
+                                {{ $user->location ?: 'Lokasi belum diatur' }}
                             </span>
                         </div>
 
                         <div class="profile-detail">
                             <span class="detail-icon">▣</span>
                             <span>
-                                Bergabung sejak 12 Juni 2025
+                                Bergabung sejak {{ $user->created_at ? $user->created_at->translatedFormat('d F Y') : '-' }}
                             </span>
                         </div>
 
@@ -1059,7 +1310,7 @@
 
                 <div class="profile-decoration">
 
-                    <button class="edit-profile">
+                    <button type="button" class="edit-profile" id="openEditProfileMain">
                         <span>✎</span>
                         Edit Profil
                     </button>
@@ -1102,20 +1353,15 @@
                             Tentang Saya
                         </h2>
 
-                        <div class="panel-edit">
+                        <button type="button" class="panel-edit" id="openEditProfileAbout" aria-label="Edit tentang saya">
                             ✎
-                        </div>
+                        </button>
 
                     </div>
 
 
                     <p class="about-text">
-
-                        Halo! Saya Vivi, seorang mahasiswa yang tertarik dalam
-                        bidang lingkungan dan kesejahteraan hewan. Saya percaya
-                        bahwa hal-hal kecil yang kita lakukan bersama bisa membawa
-                        dampak besar untuk masa depan yang lebih baik. 🌱
-
+                        {{ $user->about ?: 'Belum ada informasi tentang diri Anda. Klik Edit Profil untuk menambahkan deskripsi.' }}
                     </p>
 
 
@@ -1150,63 +1396,42 @@
 
                         <!-- EMAIL -->
 
-                        <div class="account-item">
+                        <button type="button" class="account-item account-action" id="openEmailSettings">
 
-                            <div class="account-icon">
-                                ✉
-                            </div>
+                            <div class="account-icon">✉</div>
 
                             <div class="account-content">
-
-                                <div class="account-label">
-                                    Email
-                                </div>
-
-                                <div class="account-value">
-                                    {{ Auth::user()->email ?? 'vivi.marchelia@example.com' }}
-                                </div>
-
+                                <div class="account-label">Email</div>
+                                <div class="account-value">{{ $user->email ?? '-' }}</div>
                             </div>
 
-                            <div class="account-arrow">
-                                ›
-                            </div>
+                            <div class="account-arrow">›</div>
 
-                        </div>
+                        </button>
 
 
 
                         <!-- PASSWORD -->
 
-                        <div class="account-item">
+                        <button type="button" class="account-item account-action" id="openPasswordModal">
 
-                            <div class="account-icon">
-                                🔒
-                            </div>
+                            <div class="account-icon">🔒</div>
 
                             <div class="account-content">
-
-                                <div class="account-label">
-                                    Password
-                                </div>
-
-                                <div class="account-value">
-                                    ********
-                                </div>
-
+                                <div class="account-label">Password</div>
+                                <div class="account-value">********</div>
                             </div>
 
-                            <div class="account-arrow">
-                                ›
-                            </div>
+                            <div class="account-arrow">›</div>
 
-                        </div>
+                        </button>
 
 
 
                         <!-- UBAH PROFIL -->
 
-                        <div class="account-item">
+                        <button type="button" class="account-item" id="openEditProfileAccount"
+                                style="background:transparent;border-left:0;border-right:0;border-top:0;text-align:left;cursor:pointer;">
 
                             <div class="account-icon">
                                 ♙
@@ -1224,31 +1449,27 @@
                                 ›
                             </div>
 
-                        </div>
+                        </button>
 
 
 
                         <!-- LOGOUT -->
 
-                        <div class="account-item account-logout">
+                        <form action="{{ route('logout') }}" method="POST" class="account-logout-form"
+                              onsubmit="return confirm('Yakin ingin logout dari Bertaut?');">
+                            @csrf
+                            <button type="submit" class="account-item account-logout account-action">
 
-                            <div class="account-icon">
-                                ⇥
-                            </div>
+                                <div class="account-icon">⇥</div>
 
-                            <div class="account-content">
-
-                                <div class="account-label">
-                                    Logout
+                                <div class="account-content">
+                                    <div class="account-label">Logout</div>
                                 </div>
 
-                            </div>
+                                <div class="account-arrow">›</div>
 
-                            <div class="account-arrow">
-                                ›
-                            </div>
-
-                        </div>
+                            </button>
+                        </form>
 
 
                     </div>
@@ -1266,6 +1487,292 @@
             <div class="background-shape shape-pink"></div>
             <div class="background-shape shape-yellow"></div>
             <div class="background-shape shape-mint"></div>
+
+
+            <!-- =================================================
+                 MODAL EDIT PROFIL
+            ================================================== -->
+            <div class="profile-modal" id="profileEditModal" aria-hidden="true">
+                <div class="profile-modal-content" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+                    <div class="profile-modal-header">
+                        <h2 class="profile-modal-title" id="profileModalTitle">Edit Profil</h2>
+                        <button type="button" class="profile-modal-close" id="closeProfileModal" aria-label="Tutup">&times;</button>
+                    </div>
+
+                    <form action="{{ route('profil.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="profile-form-group">
+                            <label for="profile_name">Nama Lengkap</label>
+                            <input class="profile-form-control" type="text" id="profile_name" name="name"
+                                   value="{{ old('name', $user->name) }}" required maxlength="255">
+                            @error('name') <div class="profile-form-error">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label for="profile_email">Email</label>
+                            <input class="profile-form-control" type="email" id="profile_email" name="email"
+                                   value="{{ old('email', $user->email) }}" required maxlength="255">
+                            @error('email') <div class="profile-form-error">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label for="profile_location">Lokasi</label>
+                            <input class="profile-form-control" type="text" id="profile_location" name="location"
+                                   value="{{ old('location', $user->location) }}" maxlength="255"
+                                   placeholder="Contoh: Palembang, Indonesia">
+                            @error('location') <div class="profile-form-error">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label for="profile_about">Tentang Saya</label>
+                            <textarea class="profile-form-control" id="profile_about" name="about"
+                                      maxlength="1000" placeholder="Ceritakan sedikit tentang dirimu...">{{ old('about', $user->about) }}</textarea>
+                            @error('about') <div class="profile-form-error">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label for="profile_photo">Foto Profil</label>
+                            @if($user->profile_photo)
+                                <img class="profile-photo-preview" id="profilePhotoPreview"
+                                     src="{{ asset('storage/' . $user->profile_photo) }}" alt="Preview foto profil">
+                            @else
+                                <img class="profile-photo-preview" id="profilePhotoPreview"
+                                     src="" alt="Preview foto profil" style="display:none;">
+                            @endif
+                            <input class="profile-form-control" type="file" id="profile_photo" name="profile_photo"
+                                   accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+                            <small style="display:block;margin-top:6px;color:#7290bd;font-size:11px;">
+                                Format JPG, JPEG, PNG, atau WEBP. Maksimal 2 MB.
+                            </small>
+                            @error('profile_photo') <div class="profile-form-error">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="profile-modal-actions">
+                            <button type="button" class="profile-cancel-button" id="cancelProfileEdit">Batal</button>
+                            <button type="submit" class="profile-save-button">Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- MODAL UBAH PASSWORD --}}
+            <div class="profile-modal" id="passwordModal" aria-hidden="true">
+                <div class="profile-modal-content" role="dialog" aria-modal="true" aria-labelledby="passwordModalTitle">
+                    <div class="profile-modal-header">
+                        <h2 class="profile-modal-title" id="passwordModalTitle">Ubah Password</h2>
+                        <button type="button" class="profile-modal-close" id="closePasswordModal" aria-label="Tutup">&times;</button>
+                    </div>
+
+                    @if(session('password_success'))
+                        <div class="profile-alert profile-alert-success">{{ session('password_success') }}</div>
+                    @endif
+
+                    @if($errors->getBag('password')->any())
+                        <div class="profile-alert profile-alert-error">
+                            @foreach($errors->getBag('password')->all() as $error)
+                                <div>{{ $error }}</div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <form action="{{ route('profil.password.update') }}" method="POST">
+                        @csrf
+
+                        <div class="profile-form-group">
+                            <label for="current_password">Password Lama</label>
+                            <input class="profile-form-control" type="password" id="current_password"
+                                   name="current_password" autocomplete="current-password" required>
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label for="new_password">Password Baru</label>
+                            <input class="profile-form-control" type="password" id="new_password"
+                                   name="new_password" autocomplete="new-password" minlength="8" required>
+                        </div>
+
+                        <div class="profile-form-group">
+                            <label for="new_password_confirmation">Konfirmasi Password Baru</label>
+                            <input class="profile-form-control" type="password" id="new_password_confirmation"
+                                   name="new_password_confirmation" autocomplete="new-password" minlength="8" required>
+                        </div>
+
+                        <div class="profile-modal-actions">
+                            <button type="button" class="profile-cancel-button" id="cancelPasswordModal">Batal</button>
+                            <button type="submit" class="profile-save-button">Simpan Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {{-- Form khusus untuk mengganti foto lewat icon kamera tanpa membuka modal Edit Profil. --}}
+            <form id="quickPhotoForm" action="{{ route('profil.update') }}" method="POST" enctype="multipart/form-data" style="position:fixed;left:-10000px;top:0;width:1px;height:1px;overflow:hidden;">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="name" value="{{ $user->name }}">
+                <input type="hidden" name="email" value="{{ $user->email }}">
+                <input type="hidden" name="location" value="{{ $user->location }}">
+                <input type="hidden" name="about" value="{{ $user->about }}">
+                <input type="file" id="quickProfilePhoto" name="profile_photo" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+            </form>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const modal = document.getElementById('profileEditModal');
+                    const passwordModal = document.getElementById('passwordModal');
+                    const cameraButton = document.getElementById('openEditProfile');
+                    const openButtons = [
+                        document.getElementById('openEditProfileMain'),
+                        document.getElementById('openEditProfileAbout'),
+                        document.getElementById('openEditProfileAccount'),
+                        document.getElementById('openEmailSettings')
+                    ];
+                    const closeButtons = [
+                        document.getElementById('closeProfileModal'),
+                        document.getElementById('cancelProfileEdit')
+                    ];
+
+                    function openModal() {
+                        modal.classList.add('active');
+                        modal.setAttribute('aria-hidden', 'false');
+                    }
+
+                    function closeModal() {
+                        modal.classList.remove('active');
+                        modal.setAttribute('aria-hidden', 'true');
+                    }
+
+                    function openPasswordModal() {
+                        passwordModal.classList.add('active');
+                        passwordModal.setAttribute('aria-hidden', 'false');
+                    }
+
+                    function closePasswordModal() {
+                        passwordModal.classList.remove('active');
+                        passwordModal.setAttribute('aria-hidden', 'true');
+                    }
+
+                    openButtons.forEach(function (button) {
+                        if (button) {
+                            button.addEventListener('click', function () {
+                                openModal();
+                                if (button.id === 'openEmailSettings') {
+                                    setTimeout(function () {
+                                        const emailField = document.getElementById('profile_email');
+                                        if (emailField) emailField.focus();
+                                    }, 50);
+                                }
+                            });
+                        }
+                    });
+
+                    const openPasswordButton = document.getElementById('openPasswordModal');
+                    const closePasswordButtons = [
+                        document.getElementById('closePasswordModal'),
+                        document.getElementById('cancelPasswordModal')
+                    ];
+
+                    if (openPasswordButton) {
+                        openPasswordButton.addEventListener('click', openPasswordModal);
+                    }
+
+                    closePasswordButtons.forEach(function (button) {
+                        if (button) button.addEventListener('click', closePasswordModal);
+                    });
+
+                    if (passwordModal) {
+                        passwordModal.addEventListener('click', function (event) {
+                            if (event.target === passwordModal) closePasswordModal();
+                        });
+                    }
+
+                    // Tombol kamera hanya memilih dan menyimpan foto; tidak membuka modal Edit Profil.
+                    const photoInput = document.getElementById('profile_photo');
+                    const photoPreview = document.getElementById('profilePhotoPreview');
+                    const quickPhotoInput = document.getElementById('quickProfilePhoto');
+                    const quickPhotoForm = document.getElementById('quickPhotoForm');
+
+                    if (cameraButton && quickPhotoInput) {
+                        cameraButton.addEventListener('click', function () {
+                            quickPhotoInput.click();
+                        });
+                    }
+
+                    if (quickPhotoInput && quickPhotoForm) {
+                        quickPhotoInput.addEventListener('change', function () {
+                            const file = quickPhotoInput.files && quickPhotoInput.files[0];
+                            if (!file) return;
+
+                            const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                            const maxSize = 2 * 1024 * 1024;
+
+                            if (!allowedTypes.includes(file.type)) {
+                                alert('Pilih foto berformat JPG, PNG, atau WEBP.');
+                                quickPhotoInput.value = '';
+                                return;
+                            }
+
+                            if (file.size > maxSize) {
+                                alert('Ukuran foto maksimal 2 MB.');
+                                quickPhotoInput.value = '';
+                                return;
+                            }
+
+                            quickPhotoForm.submit();
+                        });
+                    }
+
+                    closeButtons.forEach(function (button) {
+                        if (button) button.addEventListener('click', closeModal);
+                    });
+
+                    modal.addEventListener('click', function (event) {
+                        if (event.target === modal) closeModal();
+                    });
+
+                    document.addEventListener('keydown', function (event) {
+                        if (event.key === 'Escape') {
+                            closeModal();
+                            closePasswordModal();
+                        }
+                    });
+
+                    if (photoInput && photoPreview) {
+                        photoInput.addEventListener('change', function (event) {
+                            const file = event.target.files && event.target.files[0];
+                            if (!file) return;
+
+                            const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+                            const maxSize = 2 * 1024 * 1024;
+
+                            if (!allowedTypes.includes(file.type)) {
+                                alert('Pilih foto berformat JPG, PNG, atau WEBP.');
+                                photoInput.value = '';
+                                return;
+                            }
+
+                            if (file.size > maxSize) {
+                                alert('Ukuran foto maksimal 2 MB.');
+                                photoInput.value = '';
+                                return;
+                            }
+
+                            photoPreview.src = URL.createObjectURL(file);
+                            photoPreview.style.display = 'block';
+                        });
+                    }
+
+                    // Buka kembali modal jika validasi Laravel gagal.
+                    @if($errors->any() && !$errors->getBag('password')->any())
+                        openModal();
+                    @endif
+
+                    @if(session('open_password_modal') || session('password_success') || $errors->getBag('password')->any())
+                        openPasswordModal();
+                    @endif
+                });
+            </script>
 
 
         </main>

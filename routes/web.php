@@ -3,10 +3,12 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 use App\Models\User;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\RuangAksiController;
+use App\Http\Controllers\ProfilController;
 
 
 /*
@@ -26,13 +28,10 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-// Menampilkan halaman login
 Route::get('/login', function () {
     return view('login');
 })->name('login');
 
-
-// Memproses login
 Route::post('/login', function (Request $request) {
 
     $credentials = $request->validate([
@@ -41,7 +40,6 @@ Route::post('/login', function (Request $request) {
     ]);
 
     if (Auth::attempt($credentials)) {
-
         $request->session()->regenerate();
 
         return redirect()->route('dashboard');
@@ -62,13 +60,10 @@ Route::post('/login', function (Request $request) {
 |--------------------------------------------------------------------------
 */
 
-// Menampilkan halaman register
 Route::get('/register', function () {
     return view('register');
 })->name('register');
 
-
-// Memproses register
 Route::post('/register', function (Request $request) {
 
     $validated = $request->validate([
@@ -100,25 +95,16 @@ Route::post('/register', function (Request $request) {
         'password.confirmed' => 'Konfirmasi password tidak cocok.',
     ]);
 
-
-    // Membuat akun pengguna baru
-    // Password otomatis di-hash melalui User.php
     $user = User::create([
         'name' => $validated['name'],
         'email' => $validated['email'],
         'password' => $validated['password'],
     ]);
 
-
-    // Login otomatis setelah register
     Auth::login($user);
 
-
-    // Membuat session baru
     $request->session()->regenerate();
 
-
-    // Mengarahkan pengguna ke dashboard
     return redirect()->route('dashboard');
 
 })->name('register.process');
@@ -141,13 +127,25 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 |--------------------------------------------------------------------------
 */
 
-Route::get('/kegiatan', function () {
-    $kegiatan = \App\Models\Kegiatan::latest()->get();
+Route::get('/kegiatan', function (Request $request) {
 
-    return view('kegiatan', compact('kegiatan'));
-})
-    ->middleware('auth')
-    ->name('kegiatan');
+    $query = trim($request->input('q', ''));
+
+    $kegiatan = \App\Models\Kegiatan::query()
+        ->when($query !== '', function ($builder) use ($query) {
+            $builder->where(function ($search) use ($query) {
+                $search->where('judul', 'like', "%{$query}%")
+                    ->orWhere('kategori', 'like', "%{$query}%")
+                    ->orWhere('deskripsi', 'like', "%{$query}%")
+                    ->orWhere('lokasi', 'like', "%{$query}%");
+            });
+        })
+        ->latest()
+        ->get();
+
+    return view('kegiatan', compact('kegiatan', 'query'));
+
+})->middleware('auth')->name('kegiatan');
 
 Route::get('/kegiatan/{id}', [KegiatanController::class, 'show'])
     ->middleware('auth')
@@ -156,6 +154,32 @@ Route::get('/kegiatan/{id}', [KegiatanController::class, 'show'])
 Route::post('/kegiatan/{id}/join', [KegiatanController::class, 'join'])
     ->middleware('auth')
     ->name('kegiatan.join');
+
+
+/*
+|--------------------------------------------------------------------------
+| Verifikasi Peserta Oleh EO
+|--------------------------------------------------------------------------
+*/
+
+Route::post(
+    '/kegiatan/{kegiatanId}/peserta/{pesertaId}/verifikasi',
+    [KegiatanController::class, 'verifikasiPeserta']
+)->middleware('auth')->name('kegiatan.verifikasi-peserta');
+
+
+/*
+|--------------------------------------------------------------------------
+| Halaman Daftar Peserta Untuk EO
+|--------------------------------------------------------------------------
+*/
+
+Route::get(
+    '/kegiatan/{id}/peserta',
+    [KegiatanController::class, 'daftarPeserta']
+)->middleware('auth')->name('kegiatan.peserta');
+
+
 /*
 |--------------------------------------------------------------------------
 | Halaman Kegiatan Saya
@@ -163,7 +187,22 @@ Route::post('/kegiatan/{id}/join', [KegiatanController::class, 'join'])
 */
 
 Route::get('/kegiatan-saya', function () {
-    return view('kegiatan-saya');
+
+    $user = auth()->user();
+
+    $kegiatanDiikuti = \App\Models\Kegiatan::whereHas('peserta', function ($query) use ($user) {
+        $query->where('user_id', $user->id);
+    })->latest()->get();
+
+    $kegiatanDibuat = \App\Models\Kegiatan::where('user_id', $user->id)
+        ->latest()
+        ->get();
+
+    return view('kegiatan-saya', compact(
+        'kegiatanDiikuti',
+        'kegiatanDibuat'
+    ));
+
 })
     ->middleware('auth')
     ->name('kegiatan-saya');
@@ -184,23 +223,22 @@ Route::get('/buat-kegiatan', function () {
 Route::post('/buat-kegiatan', [KegiatanController::class, 'store'])
     ->middleware('auth')
     ->name('buat-kegiatan.store');
+
+
 /*
 |--------------------------------------------------------------------------
 | Halaman Ruang Aksi
 |--------------------------------------------------------------------------
 */
 
-// Ruang Aksi umum
 Route::get('/ruang-aksi', [RuangAksiController::class, 'index'])
     ->middleware('auth')
     ->name('ruang-aksi');
 
-// Ruang Aksi berdasarkan kegiatan
 Route::get('/ruang-aksi/{id}', [RuangAksiController::class, 'show'])
     ->middleware('auth')
     ->name('ruang-aksi.detail');
 
-// Mengirim pesan Ruang Aksi
 Route::post('/ruang-aksi/{id}/pesan', [RuangAksiController::class, 'storeMessage'])
     ->middleware('auth')
     ->name('ruang-aksi.pesan.store');
@@ -213,13 +251,20 @@ Route::post('/ruang-aksi/{id}/pesan', [RuangAksiController::class, 'storeMessage
 */
 
 Route::get('/sertifikat', function () {
-    return view('sertifikat');
+
+    $sertifikats = \App\Models\Sertifikat::with('kegiatan')
+        ->where('user_id', auth()->id())
+        ->latest('tanggal_terbit')
+        ->get();
+
+    return view('sertifikat', compact('sertifikats'));
+
 })
     ->middleware('auth')
     ->name('sertifikat');
 
 
-    /*
+/*
 |--------------------------------------------------------------------------
 | Halaman Profil
 |--------------------------------------------------------------------------
@@ -231,7 +276,15 @@ Route::get('/profil', function () {
     ->middleware('auth')
     ->name('profil');
 
-    
+Route::put('/profil/update', [ProfilController::class, 'update'])
+    ->middleware('auth')
+    ->name('profil.update');
+
+Route::post('/profil/password', [ProfilController::class, 'updatePassword'])
+    ->middleware('auth')
+    ->name('profil.password.update');
+
+
 /*
 |--------------------------------------------------------------------------
 | Logout

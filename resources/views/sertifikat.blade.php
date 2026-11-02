@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500;1,600&display=swap" rel="stylesheet">
 
     <style>
         * {
@@ -428,6 +428,32 @@
             font-size: 11px;
         }
 
+        .certificate-empty-state {
+            grid-column: 1 / -1;
+            padding: 30px 18px;
+            text-align: center;
+            background: #f5faff;
+            border: 2px dashed #c7dafa;
+            border-radius: 16px;
+            color: #4380d5;
+        }
+
+        .certificate-empty-state .empty-icon {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .certificate-empty-state h3 {
+            color: #073b91;
+            font-size: 16px;
+            margin-bottom: 7px;
+        }
+
+        .certificate-empty-state p {
+            font-size: 12px;
+            line-height: 1.7;
+        }
+
 
         /* =========================================================
            PREVIEW
@@ -506,7 +532,10 @@
 
             padding: 28px 35px;
 
-            box-shadow: 0 10px 25px rgba(24, 82, 139, .08);
+            box-shadow:
+                0 10px 25px rgba(24, 82, 139, .08),
+                inset 0 0 0 7px rgba(255, 255, 255, .72),
+                inset 0 0 0 9px rgba(13, 101, 183, .10);
         }
 
         .certificate-paper::before {
@@ -556,10 +585,12 @@
 
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 9px;
 
-            font-size: 19px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 20px;
             font-weight: 800;
+            letter-spacing: -.6px;
             color: #073b91;
         }
 
@@ -568,53 +599,64 @@
         }
 
         .certificate-small {
-            margin-top: 7px;
+            margin-top: 8px;
 
             color: #073b91;
+            font-family: 'Poppins', sans-serif;
             font-size: 9px;
             font-weight: 600;
+            letter-spacing: .35px;
         }
 
         .certificate-title {
-            margin-top: 15px;
+            margin-top: 16px;
 
             color: #073b91;
-            font-size: clamp(32px, 4vw, 54px);
-            line-height: .9;
-            font-weight: 900;
-            letter-spacing: -1px;
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(34px, 4vw, 52px);
+            line-height: 1.05;
+            font-weight: 800;
+            letter-spacing: 1px;
         }
 
         .certificate-subtitle {
-            margin-top: 7px;
+            margin-top: 9px;
 
-            padding: 4px 20px;
+            padding: 5px 23px;
 
             border-radius: 20px;
 
             background: #f5a6cb;
 
             color: #073b91;
-
-            font-size: 11px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
             font-weight: 800;
-            letter-spacing: 3px;
+            letter-spacing: 3.5px;
+            box-shadow: 0 4px 10px rgba(245, 166, 203, .20);
         }
 
         .given-to {
-            margin-top: 13px;
+            margin-top: 14px;
 
-            color: #073b91;
+            color: #3267ad;
+            font-family: 'Poppins', sans-serif;
             font-size: 10px;
+            font-weight: 500;
+            letter-spacing: .4px;
         }
 
         .recipient-name {
-            margin-top: 3px;
+            margin-top: 5px;
 
             color: #073b91;
-            font-family: "Brush Script MT", "Segoe Script", cursive;
-            font-size: clamp(28px, 3.3vw, 48px);
-            font-weight: 500;
+            font-family: 'Poppins', sans-serif;
+            font-size: clamp(25px, 2.8vw, 37px);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: .3px;
+            text-align: center;
+            overflow-wrap: anywhere;
         }
 
         .recipient-line {
@@ -627,30 +669,34 @@
         }
 
         .certificate-description {
-            max-width: 610px;
+            max-width: 650px;
 
-            margin-top: 11px;
+            margin-top: 13px;
 
-            color: #073b91;
-
+            color: #244f91;
+            font-family: 'Poppins', sans-serif;
             font-size: 10px;
-            line-height: 1.5;
+            font-weight: 400;
+            line-height: 1.65;
+            letter-spacing: .05px;
             text-align: center;
         }
 
         .certificate-message {
-            margin-top: 9px;
+            margin-top: 11px;
 
-            padding: 5px 15px;
+            padding: 6px 18px;
 
             border-radius: 20px;
 
             background: #d9efff;
 
             color: #073b91;
-
+            font-family: 'Poppins', sans-serif;
             font-size: 9px;
             font-weight: 700;
+            letter-spacing: .1px;
+            box-shadow: 0 4px 10px rgba(13, 101, 183, .08);
         }
 
         .certificate-footer {
@@ -670,10 +716,13 @@
         }
 
         .signature-name {
-            height: 22px;
+            height: 25px;
 
-            font-family: "Brush Script MT", "Segoe Script", cursive;
-            font-size: 21px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-style: italic;
+            font-weight: 600;
+            line-height: 1.3;
         }
 
         .signature-line {
@@ -683,29 +732,13 @@
 
         .signature small {
             display: block;
-            margin-top: 4px;
+            margin-top: 5px;
 
+            font-family: 'Poppins', sans-serif;
             font-size: 8px;
+            font-weight: 500;
+            letter-spacing: .15px;
         }
-
-        .certificate-decoration-left {
-            position: absolute;
-            left: 20px;
-            bottom: 25px;
-
-            font-size: 42px;
-            z-index: 3;
-        }
-
-        .certificate-decoration-right {
-            position: absolute;
-            right: 22px;
-            bottom: 25px;
-
-            font-size: 42px;
-            z-index: 3;
-        }
-
 
         /* =========================================================
            BUTTON
@@ -1007,12 +1040,21 @@
 
             <div class="topbar-profile">
 
-                <div class="profile-photo">
-                    👩🏻
-                </div>
+                @if (auth()->user()->profile_photo)
+                    <img
+                        class="profile-photo"
+                        src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
+                        alt="Foto profil"
+                        style="object-fit: cover;"
+                    >
+                @else
+                    <div class="profile-photo">
+                        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                    </div>
+                @endif
 
                 <div class="profile-info">
-                    <strong>Hai, Vivi Marchelia!</strong>
+                    <strong>Hai, {{ auth()->user()->name }}!</strong>
                     <span>Volunteer</span>
                 </div>
 
@@ -1084,103 +1126,47 @@
 
                     <h2>Daftar Sertifikat</h2>
 
-                    <span class="certificate-count">
-                        4 Sertifikat
+                    <span class="certificate-count" id="certificateCount">
+                        {{ $sertifikats->count() }} Sertifikat
                     </span>
 
                 </div>
 
+                @forelse ($sertifikats as $index => $sertifikat)
 
-                {{-- ITEM 1 --}}
-                <a href="#" class="certificate-item active">
+                    <button
+                        type="button"
+                        class="certificate-item {{ $index === 0 ? 'active' : '' }}"
+                        data-certificate-index="{{ $index }}"
+                    >
 
-                    <div class="certificate-thumb">
-                        🏖️
-                    </div>
+                        <div class="certificate-thumb">
+                            🏅
+                        </div>
 
-                    <div class="certificate-detail">
+                        <div class="certificate-detail">
+                            <h3>{{ $sertifikat->kegiatan->judul }}</h3>
+                            <p>
+                                {{ $sertifikat->tanggal_terbit
+                                    ? $sertifikat->tanggal_terbit->translatedFormat('d F Y')
+                                    : '-' }}
+                            </p>
+                        </div>
 
-                        <h3>
-                            Bersih-Bersih<br>
-                            Pantai Kuta
-                        </h3>
+                    </button>
 
+                @empty
+
+                    <div class="certificate-empty-state">
+                        <div class="empty-icon">🌱</div>
+                        <h3>Belum Ada Sertifikat</h3>
                         <p>
-                            20 September 2025
+                            Sertifikat akan muncul di sini setelah kamu menyelesaikan
+                            kegiatan dan EO memverifikasi keikutsertaanmu.
                         </p>
-
                     </div>
 
-                </a>
-
-
-                {{-- ITEM 2 --}}
-                <a href="#" class="certificate-item">
-
-                    <div class="certificate-thumb">
-                        🌳
-                    </div>
-
-                    <div class="certificate-detail">
-
-                        <h3>
-                            Penanaman Pohon<br>
-                            Bersama
-                        </h3>
-
-                        <p>
-                            12 Agustus 2025
-                        </p>
-
-                    </div>
-
-                </a>
-
-
-                {{-- ITEM 3 --}}
-                <a href="#" class="certificate-item">
-
-                    <div class="certificate-thumb">
-                        📚
-                    </div>
-
-                    <div class="certificate-detail">
-
-                        <h3>
-                            Edukasi Lingkungan<br>
-                            di Sekolah
-                        </h3>
-
-                        <p>
-                            5 Juli 2025
-                        </p>
-
-                    </div>
-
-                </a>
-
-
-                {{-- ITEM 4 --}}
-                <a href="#" class="certificate-item">
-
-                    <div class="certificate-thumb">
-                        🐶
-                    </div>
-
-                    <div class="certificate-detail">
-
-                        <h3>
-                            Donasi & Perawatan<br>
-                            Hewan
-                        </h3>
-
-                        <p>
-                            18 Mei 2025
-                        </p>
-
-                    </div>
-
-                </a>
+                @endforelse
 
             </div>
 
@@ -1189,6 +1175,7 @@
             {{-- =================================================
                  PREVIEW SERTIFIKAT
             ================================================== --}}
+            @if ($sertifikats->isNotEmpty())
             <div class="certificate-preview-card">
 
                 <div class="preview-header">
@@ -1197,15 +1184,15 @@
 
                     <div class="preview-controls">
 
-                        <span class="preview-number">
+                        <span class="preview-number" id="previewNumber">
                             1 / 4
                         </span>
 
-                        <button class="preview-arrow">
+                        <button type="button" class="preview-arrow" id="previousCertificate" aria-label="Sertifikat sebelumnya">
                             ‹
                         </button>
 
-                        <button class="preview-arrow">
+                        <button type="button" class="preview-arrow" id="nextCertificate" aria-label="Sertifikat berikutnya">
                             ›
                         </button>
 
@@ -1218,7 +1205,7 @@
                 {{-- =================================================
                      KERTAS SERTIFIKAT
                 ================================================== --}}
-                <div class="certificate-paper">
+                <div class="certificate-paper" id="certificatePaper">
 
                     <div class="certificate-content">
 
@@ -1258,15 +1245,15 @@
 
 
                         {{-- NAMA PESERTA --}}
-                        <div class="recipient-name">
-                            Vivi Marchelia
+                        <div class="recipient-name" id="recipientName">
+                            {{ auth()->user()->name }}
                         </div>
 
                         <div class="recipient-line"></div>
 
 
                         {{-- DESKRIPSI --}}
-                        <p class="certificate-description">
+                        <p class="certificate-description" id="certificateDescription">
 
                             Atas partisipasi dan kontribusi sebagai relawan
                             dalam kegiatan Bersih-Bersih Pantai Kuta
@@ -1306,9 +1293,7 @@
 
                                 <div class="signature-line"></div>
 
-                                <small>
-                                    17 September 2026
-                                </small>
+                                <small id="certificateDate">20 September 2025</small>
 
                             </div>
 
@@ -1330,14 +1315,6 @@
                         </div>
 
 
-                        {{-- DEKORASI --}}
-                        <div class="certificate-decoration-left">
-                            🌎🌿
-                        </div>
-
-                        <div class="certificate-decoration-right">
-                            🐶🐱
-                        </div>
 
                     </div>
 
@@ -1350,17 +1327,17 @@
                 ================================================== --}}
                 <div class="certificate-actions">
 
-                    <button class="certificate-action action-view">
+                    <button type="button" class="certificate-action action-view" id="viewCertificate">
                         👁️
                         Lihat Ukuran Penuh
                     </button>
 
-                    <button class="certificate-action action-download">
+                    <button type="button" class="certificate-action action-download" id="downloadCertificate">
                         ⬇️
                         Download Sertifikat
                     </button>
 
-                    <button class="certificate-action action-share">
+                    <button type="button" class="certificate-action action-share" id="shareCertificate">
                         ↗️
                         Bagikan ke Media Sosial
                     </button>
@@ -1368,6 +1345,16 @@
                 </div>
 
             </div>
+            @else
+                <div class="certificate-preview-card certificate-empty-state">
+                    <div class="empty-icon">💙</div>
+                    <h3>Perjalanan Aksimu Dimulai dari Sini</h3>
+                    <p>
+                        Ikuti kegiatan volunteer, selesaikan kegiatan tersebut,
+                        lalu tunggu verifikasi dari EO untuk mendapatkan sertifikat.
+                    </p>
+                </div>
+            @endif
 
         </section>
 
@@ -1407,6 +1394,424 @@
         </section>
 
     </main>
+
+
+    <!-- Modal ukuran penuh -->
+    <div class="certificate-modal" id="certificateModal" aria-hidden="true">
+        <div class="certificate-modal-content" role="dialog" aria-modal="true" aria-label="Pratinjau sertifikat ukuran penuh">
+            <button type="button" class="certificate-modal-close" id="closeCertificateModal" aria-label="Tutup">×</button>
+            <div id="fullCertificateContainer"></div>
+        </div>
+    </div>
+
+    <style>
+        .certificate-item {
+            text-align: left;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        /* Modal ukuran penuh: sertifikat ditampilkan utuh tanpa scroll di dalam modal */
+        .certificate-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            padding: 24px;
+            background: rgba(5, 25, 62, .82);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .certificate-modal.show {
+            display: flex;
+        }
+
+        .certificate-modal-content {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: min(1500px, 96vw);
+            height: 92vh;
+            max-height: 92vh;
+            padding: 58px 22px 22px;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 24px 70px rgba(0, 0, 0, .25);
+        }
+
+        .certificate-modal-content #fullCertificateContainer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .certificate-modal-content .certificate-paper {
+            /* Batasi ukuran berdasarkan tinggi layar agar seluruh sertifikat muat */
+            width: min(100%, calc((92vh - 100px) * 1.67));
+            max-width: 100%;
+            max-height: calc(92vh - 100px);
+            aspect-ratio: 1.67 / 1;
+            height: auto;
+            flex: 0 1 auto;
+            padding: clamp(14px, 2.2vh, 28px) clamp(16px, 2.4vw, 35px);
+            overflow: hidden;
+        }
+
+        .certificate-modal-close {
+            position: absolute;
+            top: 14px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #ff5991;
+            color: white;
+            font-size: 27px;
+            line-height: 1;
+            box-shadow: 0 4px 12px rgba(255, 89, 145, .25);
+        }
+
+        .certificate-modal-close:hover {
+            background: #ee3f7d;
+            transform: scale(1.05);
+        }
+
+        /* Ukuran teks ikut mengecil secara proporsional pada layar yang pendek */
+        .certificate-modal-content .certificate-title {
+            font-size: clamp(28px, 4vh, 52px);
+        }
+
+        .certificate-modal-content .recipient-name {
+            font-size: clamp(23px, 2.8vh, 37px);
+        }
+
+        .certificate-modal-content .certificate-description {
+            font-size: clamp(8px, 1.15vh, 11px);
+            line-height: 1.45;
+        }
+
+        .certificate-modal-content .certificate-message {
+            font-size: clamp(8px, 1vh, 10px);
+        }
+
+        .certificate-modal-content .signature-name {
+            font-size: clamp(12px, 1.7vh, 16px);
+        }
+
+        .certificate-modal-content .signature small {
+            font-size: clamp(7px, .9vh, 9px);
+        }
+
+        @media (max-width: 700px) {
+            .certificate-modal {
+                padding: 10px;
+            }
+
+            .certificate-modal-content {
+                width: 100%;
+                height: auto;
+                max-height: 94vh;
+                padding: 54px 10px 12px;
+                border-radius: 14px;
+            }
+
+            .certificate-modal-content .certificate-paper {
+                width: 100%;
+                max-height: none;
+                aspect-ratio: 1.25 / 1;
+                padding: 14px 10px;
+            }
+
+            .certificate-modal-content .certificate-logo {
+                font-size: 13px;
+            }
+
+            .certificate-modal-content .certificate-logo-heart {
+                font-size: 18px;
+            }
+
+            .certificate-modal-content .certificate-small {
+                font-size: 7px;
+            }
+
+            .certificate-modal-content .certificate-title {
+                font-size: clamp(22px, 6vw, 34px);
+                margin-top: 12px;
+            }
+
+            .certificate-modal-content .certificate-subtitle {
+                font-size: 8px;
+                padding: 3px 12px;
+                letter-spacing: 2px;
+            }
+
+            .certificate-modal-content .given-to {
+                font-size: 8px;
+                margin-top: 8px;
+            }
+
+            .certificate-modal-content .recipient-name {
+                font-size: clamp(18px, 4vw, 25px);
+                text-align: center;
+            }
+
+            .certificate-modal-content .recipient-line {
+                width: 75%;
+            }
+
+            .certificate-modal-content .certificate-description {
+                max-width: 95%;
+                font-size: 7px;
+                margin-top: 8px;
+            }
+
+            .certificate-modal-content .certificate-message {
+                margin-top: 6px;
+                font-size: 7px;
+                padding: 4px 9px;
+            }
+
+            .certificate-modal-content .certificate-footer {
+                width: 95%;
+                gap: 7px;
+            }
+
+            .certificate-modal-content .signature-name {
+                font-size: 11px;
+            }
+
+            .certificate-modal-content .signature small {
+                font-size: 6px;
+            }
+
+            .certificate-modal-close {
+                top: 9px;
+                right: 9px;
+                width: 36px;
+                height: 36px;
+            }
+        }
+        @media print {
+            /* Cetak satu sertifikat penuh pada satu lembar A4 landscape */
+            @page {
+                size: A4 landscape;
+                margin: 0;
+            }
+
+            html,
+            body {
+                width: 297mm !important;
+                height: 210mm !important;
+                min-height: 0 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: hidden !important;
+                background: #ffffff !important;
+            }
+
+            body * {
+                visibility: hidden !important;
+            }
+
+            #certificatePaper,
+            #certificatePaper * {
+                visibility: visible !important;
+            }
+
+            #certificatePaper {
+                position: fixed !important;
+                left: 10mm !important;
+                top: 10mm !important;
+                display: block !important;
+                width: 277mm !important;
+                height: 166mm !important;
+                min-height: 0 !important;
+                max-height: 166mm !important;
+                aspect-ratio: auto !important;
+                box-sizing: border-box !important;
+                margin: 0 !important;
+                padding: 10mm 13mm !important;
+                overflow: hidden !important;
+                border: 1.5mm solid #0d65b7 !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                page-break-before: avoid !important;
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+                break-before: avoid-page !important;
+                break-after: avoid-page !important;
+                break-inside: avoid-page !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            #certificatePaper .certificate-content {
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            #certificatePaper .certificate-title {
+                font-size: 42pt !important;
+            }
+
+            #certificatePaper .recipient-name {
+                font-size: 34pt !important;
+            }
+
+            #certificatePaper .certificate-description {
+                max-width: 220mm !important;
+                font-size: 9pt !important;
+                line-height: 1.4 !important;
+            }
+
+            #certificatePaper .certificate-message {
+                font-size: 8pt !important;
+            }
+
+            #certificatePaper .signature-name {
+                font-size: 17pt !important;
+            }
+
+            #certificatePaper .signature small {
+                font-size: 7pt !important;
+            }
+
+            #certificatePaper::before,
+            #certificatePaper::after {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Data sertifikat diambil dari database untuk pengguna yang sedang login.
+            const certificates = [
+                @foreach ($sertifikats as $sertifikat)
+                {
+                    title: @json($sertifikat->kegiatan->judul),
+                    date: @json($sertifikat->tanggal_terbit
+                        ? $sertifikat->tanggal_terbit->translatedFormat('d F Y')
+                        : '-'),
+                    number: @json($sertifikat->nomor_sertifikat),
+                    icon: '🏅',
+                    description: @json('Atas partisipasi dan kontribusi sebagai relawan dalam kegiatan ' . $sertifikat->kegiatan->judul . ' melalui platform Bertaut. Terima kasih telah menjadi bagian dari perubahan positif.')
+                },
+                @endforeach
+            ];
+
+            if (certificates.length > 0) {
+                let activeIndex = 0;
+                const items = Array.from(document.querySelectorAll('.certificate-item'));
+                const previewNumber = document.getElementById('previewNumber');
+                const recipientName = document.getElementById('recipientName');
+                const description = document.getElementById('certificateDescription');
+                const certificateDate = document.getElementById('certificateDate');
+                const modal = document.getElementById('certificateModal');
+                const fullContainer = document.getElementById('fullCertificateContainer');
+                const paper = document.getElementById('certificatePaper');
+
+                function showCertificate(index) {
+                    activeIndex = (index + certificates.length) % certificates.length;
+                    const cert = certificates[activeIndex];
+
+                    items.forEach((item, i) => {
+                        item.classList.toggle('active', i === activeIndex);
+                        item.setAttribute('aria-pressed', i === activeIndex ? 'true' : 'false');
+                    });
+
+                    previewNumber.textContent = (activeIndex + 1) + ' / ' + certificates.length;
+                    recipientName.textContent = @json(Auth::user()->name ?? '');
+                    description.textContent = cert.description;
+                    certificateDate.textContent = cert.date;
+
+                    const selectedItem = items[activeIndex];
+                    if (selectedItem) {
+                        const title = selectedItem.querySelector('.certificate-detail h3');
+                        const date = selectedItem.querySelector('.certificate-detail p');
+                        if (title) title.setAttribute('aria-label', cert.title);
+                        if (date) date.setAttribute('aria-label', cert.date);
+                    }
+                }
+
+                items.forEach((item, index) => {
+                    item.addEventListener('click', () => showCertificate(index));
+                });
+
+                document.getElementById('previousCertificate').addEventListener('click', () => {
+                    showCertificate(activeIndex - 1);
+                });
+
+                document.getElementById('nextCertificate').addEventListener('click', () => {
+                    showCertificate(activeIndex + 1);
+                });
+
+                document.getElementById('viewCertificate').addEventListener('click', () => {
+                    fullContainer.innerHTML = '';
+                    const clone = paper.cloneNode(true);
+                    clone.removeAttribute('id');
+                    fullContainer.appendChild(clone);
+                    modal.classList.add('show');
+                    modal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                });
+
+                function closeModal() {
+                    modal.classList.remove('show');
+                    modal.setAttribute('aria-hidden', 'true');
+                    document.body.style.overflow = '';
+                }
+
+                document.getElementById('closeCertificateModal').addEventListener('click', closeModal);
+                modal.addEventListener('click', event => {
+                    if (event.target === modal) closeModal();
+                });
+
+                document.addEventListener('keydown', event => {
+                    if (event.key === 'Escape' && modal.classList.contains('show')) closeModal();
+                });
+
+                document.getElementById('downloadCertificate').addEventListener('click', () => {
+                    window.print();
+                });
+
+                document.getElementById('shareCertificate').addEventListener('click', async () => {
+                    const cert = certificates[activeIndex];
+                    const shareText = 'Saya telah menyelesaikan kegiatan ' + cert.title + ' melalui Bertaut. Setiap aksi punya arti! 💙';
+                    try {
+                        if (navigator.share) {
+                            await navigator.share({
+                                title: 'Sertifikat Bertaut - ' + cert.title,
+                                text: shareText,
+                                url: window.location.href
+                            });
+                        } else if (navigator.clipboard && window.isSecureContext) {
+                            await navigator.clipboard.writeText(shareText + ' ' + window.location.href);
+                            alert('Teks berbagi berhasil disalin. Kamu bisa menempelkannya ke media sosial.');
+                        } else {
+                            window.prompt('Salin teks berikut untuk dibagikan:', shareText + ' ' + window.location.href);
+                        }
+                    } catch (error) {
+                        if (error.name !== 'AbortError') {
+                            alert('Sertifikat belum dapat dibagikan. Silakan coba lagi.');
+                        }
+                    }
+                });
+
+                showCertificate(0);
+            }
+        });
+    </script>
 
 </body>
 </html>

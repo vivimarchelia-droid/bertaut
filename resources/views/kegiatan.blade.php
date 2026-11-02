@@ -557,14 +557,16 @@
 
             <header class="top-header">
 
-                <div class="search-box">
-                    <span>⌕</span>
+                <form action="{{ route('kegiatan') }}" method="GET" class="search-box">
+    <span>⌕</span>
 
-                    <input
-                        type="text"
-                        placeholder="Cari kegiatan, komunitas, atau lokasi..."
-                    >
-                </div>
+    <input
+        type="text"
+        name="q"
+        value="{{ request('q') }}"
+        placeholder="Cari kegiatan, komunitas, atau lokasi..."
+    >
+</form>
 
                 <div class="profile-area">
 
