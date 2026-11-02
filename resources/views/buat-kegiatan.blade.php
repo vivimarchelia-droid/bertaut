@@ -60,34 +60,36 @@
             font-size: 15px;
         }
 
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-        }
+       .profile {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+}
 
-        .profile-photo {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #ffd64d;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-        }
+.profile-photo {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #ffc3dd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    font-weight: 700;
+    color: #073b91;
+}
 
-        .profile-name {
-            color: #124394;
-            font-size: 15px;
-            font-weight: 700;
-        }
+.profile-name {
+    color: #073b91;
+    font-size: 14px;
+    font-weight: 700;
+}
 
-        .profile-role {
-            color: #7290bd;
-            font-size: 12px;
-            margin-top: 2px;
-        }
+.profile-role {
+    color: #7190bd;
+    font-size: 12px;
+    margin-top: 2px;
+}
 
         /* =========================
            STEPPER
@@ -632,8 +634,8 @@
             <div class="profile">
 
                 <div class="profile-photo">
-                    👤
-                </div>
+    {{ strtoupper(substr(auth()->user()->name ?? 'V', 0, 1)) }}
+</div>
 
                 <div>
                     <div class="profile-name">

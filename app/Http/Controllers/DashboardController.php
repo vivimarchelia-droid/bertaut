@@ -13,17 +13,21 @@ class DashboardController extends Controller
         $userId = auth()->id();
 
         // Mengambil kegiatan yang dibuat dan yang diikuti pengguna
-        $kegiatanSaya = Kegiatan::where('user_id', $userId)
-            ->orWhereHas('peserta', function ($query) use ($userId) {
-                $query->where('user_id', $userId);
-            })
-            ->latest()
-            ->get();
+$kegiatanSaya = Kegiatan::whereDate('tanggal', '>=', now()->toDateString())
+    ->where(function ($query) use ($userId) {
+        $query->where('user_id', $userId)
+            ->orWhereHas('peserta', function ($q) use ($userId) {
+                $q->where('user_id', $userId);
+            });
+    })
+    ->latest()
+    ->get();
 
         // Mengambil semua kegiatan yang tersedia
         $query = Kegiatan::withCount('peserta')
-            ->with('user')
-            ->latest();
+    ->with('user')
+    ->whereDate('tanggal', '>=', now()->toDateString())
+    ->latest();
 
         // Pencarian berdasarkan judul, kategori, dan lokasi
         if ($request->filled('cari')) {

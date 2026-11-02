@@ -174,30 +174,37 @@
             line-height: 1.8;
         }
 
-        .join-area {
-            border-top: 1px solid #e8effb;
-            padding-top: 25px;
+       .join-area {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
 
-            display: flex;
-            justify-content: flex-end;
-        }
+#joinMessage {
+    width: 100%;
+    text-align: left;
+    margin-top: 0 !important;
+}
 
         .join-button {
-            border: none;
+    display: inline-block;
+    text-decoration: none;
+    text-align: center;
 
-            background: #ffd447;
-            color: #073b91;
+    border: none;
+    background: #ffd447;
+    color: #073b91;
 
-            padding: 14px 30px;
+    padding: 14px 30px;
+    border-radius: 13px;
 
-            border-radius: 13px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 900;
 
-            font-family: inherit;
-            font-size: 14px;
-            font-weight: 900;
-
-            cursor: pointer;
-        }
+    cursor: pointer;
+}
 
         .join-button:hover {
             background: #ffca1c;
@@ -419,26 +426,95 @@
             </div>
 
             @endif
+@if(session('error'))
+    <div style="
+        background: #ffe0e0;
+        color: #c62828;
+        padding: 15px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    ">
+        ⚠️ {{ session('error') }}
+    </div>
+@endif
 
+@if(session('success'))
+    <div style="
+        background: #d8f5e5;
+        color: #087443;
+        padding: 15px 20px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        font-weight: 600;
+    ">
+        ✓ {{ session('success') }}
+    </div>
+@endif
 
             {{-- TOMBOL JOIN --}}
 
 <div class="join-area">
 
-    <form action="{{ route('kegiatan.join', $kegiatan->id) }}" method="POST">
-    @csrf
-
-    <button
-        type="submit"
-        class="join-button"
-    >
+    <a href="{{ route('kegiatan.daftar', $kegiatan->id) }}"
+       class="join-button">
         🤝 Saya Mau Ikut
-    </button>
-</form>
+    </a>
 
 </div>
-
 </div>
+
+
+<script>
+document.getElementById('joinForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const button = form.querySelector('button');
+    const message = document.getElementById('joinMessage');
+
+    button.disabled = true;
+    button.textContent = 'Memproses...';
+
+    try {
+        const response = await fetch(form.action, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: new FormData(form)
+        });
+
+        const data = await response.json();
+
+        message.style.display = 'block';
+message.textContent = data.message;
+
+        if (response.ok) {
+            message.style.background = '#d8f5e5';
+            message.style.color = '#087443';
+
+            window.location.href = '/ruang-aksi/' + {{ $kegiatan->id }};
+        } else {
+            message.style.background = '#ffe0e0';
+            message.style.color = '#c62828';
+
+            button.disabled = false;
+            button.textContent = '🤝 Saya Mau Ikut';
+        }
+
+    } catch (error) {
+        message.style.display = 'block';
+        message.style.background = '#ffe0e0';
+        message.style.color = '#c62828';
+        message.textContent = 'Terjadi kesalahan. Silakan coba lagi.';
+
+        button.disabled = false;
+        button.textContent = '🤝 Saya Mau Ikut';
+    }
+});
+</script>
 
 </body>
 

@@ -129,9 +129,14 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 Route::get('/kegiatan', function (Request $request) {
 
-    $query = trim($request->input('q', ''));
+    $query = trim($request->input('search', ''));
 
     $kegiatan = \App\Models\Kegiatan::query()
+
+        // Hanya tampilkan kegiatan hari ini dan mendatang
+        ->whereDate('tanggal', '>=', today())
+
+        // Fitur pencarian
         ->when($query !== '', function ($builder) use ($query) {
             $builder->where(function ($search) use ($query) {
                 $search->where('judul', 'like', "%{$query}%")
@@ -140,20 +145,39 @@ Route::get('/kegiatan', function (Request $request) {
                     ->orWhere('lokasi', 'like', "%{$query}%");
             });
         })
-        ->latest()
+
+        ->orderBy('tanggal', 'asc')
         ->get();
 
     return view('kegiatan', compact('kegiatan', 'query'));
 
-})->middleware('auth')->name('kegiatan');
+})
+    ->middleware('auth')
+    ->name('kegiatan');
 
+    // Halaman detail kegiatan
 Route::get('/kegiatan/{id}', [KegiatanController::class, 'show'])
     ->middleware('auth')
     ->name('kegiatan.detail');
 
+// Bergabung dengan kegiatan
 Route::post('/kegiatan/{id}/join', [KegiatanController::class, 'join'])
     ->middleware('auth')
     ->name('kegiatan.join');
+
+/*
+|--------------------------------------------------------------------------
+| Pendaftaran Kegiatan
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/kegiatan/{id}/daftar', [KegiatanController::class, 'registrationForm'])
+    ->middleware('auth')
+    ->name('kegiatan.daftar');
+
+Route::post('/kegiatan/{id}/daftar', [KegiatanController::class, 'registerParticipant'])
+    ->middleware('auth')
+    ->name('kegiatan.daftar.store');
 
 
 /*
@@ -165,7 +189,9 @@ Route::post('/kegiatan/{id}/join', [KegiatanController::class, 'join'])
 Route::post(
     '/kegiatan/{kegiatanId}/peserta/{pesertaId}/verifikasi',
     [KegiatanController::class, 'verifikasiPeserta']
-)->middleware('auth')->name('kegiatan.verifikasi-peserta');
+)
+    ->middleware('auth')
+    ->name('kegiatan.verifikasi-peserta');
 
 
 /*
@@ -177,8 +203,9 @@ Route::post(
 Route::get(
     '/kegiatan/{id}/peserta',
     [KegiatanController::class, 'daftarPeserta']
-)->middleware('auth')->name('kegiatan.peserta');
-
+)
+    ->middleware('auth')
+    ->name('kegiatan.peserta');
 
 /*
 |--------------------------------------------------------------------------
@@ -186,17 +213,42 @@ Route::get(
 |--------------------------------------------------------------------------
 */
 
-Route::get('/kegiatan-saya', function () {
+Route::get('/kegiatan-saya', function (Request $request) {
 
-    $user = auth()->user();
+    $userId = auth()->id();
 
-    $kegiatanDiikuti = \App\Models\Kegiatan::whereHas('peserta', function ($query) use ($user) {
-        $query->where('user_id', $user->id);
-    })->latest()->get();
+    // Kegiatan yang diikuti pengguna, bukan kegiatan yang dibuat sendiri
+    $kegiatanDiikuti = \App\Models\Kegiatan::whereHas('peserta', function ($query) use ($userId) {
+        $query->where('user_id', $userId);
+    })
+        ->where('user_id', '!=', $userId);
 
-    $kegiatanDibuat = \App\Models\Kegiatan::where('user_id', $user->id)
-        ->latest()
-        ->get();
+    // Kegiatan yang dibuat pengguna
+    $kegiatanDibuat = \App\Models\Kegiatan::where('user_id', $userId);
+
+    // Pencarian kegiatan
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $filter = function ($query) use ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('judul', 'like', "%{$search}%")
+                    ->orWhere('kategori', 'like', "%{$search}%")
+                    ->orWhere('lokasi', 'like', "%{$search}%")
+                    ->orWhere('deskripsi', 'like', "%{$search}%");
+            });
+        };
+
+        $kegiatanDiikuti->where($filter);
+        $kegiatanDibuat->where($filter);
+    }
+
+    // Hanya tampilkan kegiatan yang belum melewati tanggal
+    $kegiatanDiikuti->whereDate('tanggal', '>=', today());
+    $kegiatanDibuat->whereDate('tanggal', '>=', today());
+
+    $kegiatanDiikuti = $kegiatanDiikuti->latest()->get();
+    $kegiatanDibuat = $kegiatanDibuat->latest()->get();
 
     return view('kegiatan-saya', compact(
         'kegiatanDiikuti',

@@ -105,39 +105,52 @@
         }
 
         .profile-area {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-        .profile-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: #ffc4dc;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-        }
+.notification-icon {
+    position: relative;
+    font-size: 25px;
+    color: #073b91;
+    margin-right: 8px;
+}
 
-        .profile-info h4 {
-            font-size: 14px;
-            color: #073b91;
-            margin-bottom: 5px;
-        }
+.notification-icon span {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 7px;
+    height: 7px;
+    background: #ff4f87;
+    border-radius: 50%;
+}
 
-        .profile-info p {
-            font-size: 12px;
-            color: #7892bd;
-        }
+.profile-avatar {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #ffc4dc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    font-weight: 600;
+    color: #073b91;
+}
 
-        .profile-message {
-            font-size: 16px;
-            font-weight: 900;
-            line-height: 1.05;
-            color: #073b91;
-        }
+.profile-info h4 {
+    font-size: 14px;
+    color: #073b91;
+    margin-bottom: 4px;
+    font-weight: 800;
+}
+
+.profile-info p {
+    font-size: 12px;
+    color: #7892bd;
+}
 
         /* =========================================================
            JUDUL HALAMAN
@@ -178,70 +191,81 @@
         ========================================================= */
 
         .events-hero {
-            min-height: 190px;
-            border-radius: 25px;
-            padding: 28px 32px;
-            background:
-                radial-gradient(
-                    circle at 90% 15%,
-                    rgba(255, 255, 255, 0.28) 0 65px,
-                    transparent 66px
-                ),
-                radial-gradient(
-                    circle at 83% 100%,
-                    rgba(255, 255, 255, 0.18) 0 100px,
-                    transparent 101px
-                ),
-                linear-gradient(125deg, #168fe9, #65a8f5);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 25px;
-            overflow: hidden;
-            margin-bottom: 28px;
-        }
+    min-height: 190px;
+    border-radius: 25px;
+    padding: 28px 32px;
 
-        .events-hero-text {
-            max-width: 620px;
-            position: relative;
-            z-index: 2;
-        }
+    background:
+        linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.35),
+            rgba(0, 0, 0, 0.05)
+        ),
+        url('{{ asset("images/Volunteer Tutoring Under Sunlight.png") }}');
 
-        .events-hero-text small {
-            display: block;
-            color: white;
-            font-size: 11px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 
-        .events-hero-text h2 {
-            color: white;
-            font-size: 30px;
-            font-weight: 900;
-            line-height: 1.15;
-            margin-bottom: 12px;
-        }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    overflow: hidden;
+    margin-bottom: 28px;
+}
 
-        .events-hero-text h2 span {
-            color: #ffd447;
-        }
+/* Teks hero Jelajahi Kegiatan */
+.events-hero h1,
+.events-hero h2,
+.events-hero h3,
+.events-hero p,
+.events-hero span,
+.events-hero .hero-small {
+    color: #ffffff !important;
+}
 
-        .events-hero-text p {
-            color: white;
-            font-size: 13px;
-            line-height: 1.6;
-            max-width: 550px;
-        }
+/* Ukuran dan jarak teks */
+.events-hero h1,
+.events-hero h2 {
+    font-size: 30px;
+    line-height: 1.2;
+    margin: 8px 0;
+    font-weight: 800;
+}
 
-        .events-hero-illustration {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 75px;
-            white-space: nowrap;
-        }
+.events-hero p {
+    font-size: 15px;
+    line-height: 1.5;
+    margin-top: 10px;
+}
+
+.events-hero .hero-small {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.events-hero,
+.events-hero * {
+    color: #ffffff !important;
+}
+
+.events-hero h1 {
+    font-size: 30px;
+    line-height: 1.25;
+    font-weight: 800;
+}
+
+.events-hero p {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.events-hero .hero-small {
+    font-size: 13px;
+    font-weight: 700;
+}
 
         /* =========================================================
            DAFTAR KEGIATAN
@@ -560,52 +584,37 @@
                 <form action="{{ route('kegiatan') }}" method="GET" class="search-box">
     <span>⌕</span>
 
-    <input
-        type="text"
-        name="q"
-        value="{{ request('q') }}"
-        placeholder="Cari kegiatan, komunitas, atau lokasi..."
-    >
+   <input
+    type="text"
+    name="search"
+    value="{{ request('search') }}"
+    placeholder="Cari kegiatan, komunitas, atau lokasi..."
+>
 </form>
 
                 <div class="profile-area">
 
-                    <div class="profile-avatar">
-                        👩🏻
-                    </div>
+    <div class="notification-icon">
+        ♧
+        <span></span>
+    </div>
 
-                    <div class="profile-info">
-                        <h4>Hai, Vivi Marchel ia!</h4>
-                        <p>Volunteer</p>
-                    </div>
+    <div class="profile-avatar">
+        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+    </div>
 
-                    <div class="profile-message">
-                        Keep<br>
-                        Doing<br>
-                        Good! 😊
-                    </div>
+    <div class="profile-info">
+        <h4>Hai, {{ auth()->user()->name }}!</h4>
+        <p>Volunteer</p>
+    </div>
+
 
                 </div>
 
             </header>
 
-            <!-- JUDUL HALAMAN -->
 
-            <div class="page-heading">
 
-                <div>
-                    <h1>Jelajahi Kegiatan 🌍</h1>
-
-                    <p>
-                        Temukan kegiatan volunteer yang sesuai dengan minatmu.
-                    </p>
-                </div>
-
-                <div class="page-count">
-                    12 Kegiatan
-                </div>
-
-            </div>
 
             <!-- HERO KEGIATAN -->
 
@@ -626,10 +635,6 @@
                         Pilih kegiatan yang menarik bagimu dan mulai berkontribusi.
                     </p>
 
-                </div>
-
-                <div class="events-hero-illustration">
-                    🌍 🤝 💙
                 </div>
 
             </section>
@@ -707,23 +712,7 @@
 
             </section>
 
-            <!-- PAGINATION -->
-
-            <div class="pagination">
-
-                <a href="#">‹</a>
-
-                <a href="#" class="active">1</a>
-
-                <a href="#">2</a>
-
-                <a href="#">3</a>
-
-                <a href="#">4</a>
-
-                <a href="#">›</a>
-
-            </div>
+           
 
         </main>
 

@@ -837,7 +837,6 @@
 
     <span class="bertaut-menu-text">Ruang Aksi</span>
 
-    <span class="bertaut-badge">3</span>
 </a>
 
         <!-- SERTIFIKAT -->
@@ -854,10 +853,6 @@
 
             <span class="bertaut-menu-text">
                 Sertifikat
-            </span>
-
-            <span class="bertaut-badge">
-                5
             </span>
 
         </a>

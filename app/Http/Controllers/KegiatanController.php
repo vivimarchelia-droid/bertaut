@@ -1,3 +1,4 @@
+
 <?php
 
 namespace App\Http\Controllers;
@@ -65,24 +66,73 @@ class KegiatanController extends Controller
         return view('kegiatan-detail', compact('kegiatan'));
     }
 
-    // PESERTA BERGABUNG DENGAN KEGIATAN
-    public function join($id)
+    // JOIN LAMA - TETAP DIPERTAHANKAN
+    public function join(Request $request, $id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
 
-        PesertaKegiatan::firstOrCreate(
+        if ($kegiatan->user_id == auth()->id()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kamu adalah penyelenggara kegiatan ini.'
+            ], 403);
+        }
+
+        PesertaKegiatan::firstOrCreate([
+            'user_id' => auth()->id(),
+            'kegiatan_id' => $kegiatan->id,
+        ]);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Kamu berhasil bergabung dengan kegiatan!'
+        ]);
+    }
+
+    // MENAMPILKAN FORMULIR PENDAFTARAN
+    public function registrationForm($id)
+    {
+        $kegiatan = Kegiatan::findOrFail($id);
+
+        if ($kegiatan->user_id == auth()->id()) {
+            return redirect()->route('kegiatan.detail', $id)
+                ->with('error', 'Kamu adalah penyelenggara kegiatan ini.');
+        }
+
+        return view('pendaftaran-kegiatan', compact('kegiatan'));
+    }
+
+    // MENYIMPAN PENDAFTARAN PESERTA
+    public function registerParticipant(Request $request, $id)
+    {
+        $kegiatan = Kegiatan::findOrFail($id);
+
+        if ($kegiatan->user_id == auth()->id()) {
+            return redirect()->route('kegiatan.detail', $id)
+                ->with('error', 'Kamu adalah penyelenggara kegiatan ini.');
+        }
+
+        $validated = $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'no_hp' => 'required|string|max:20',
+            'instansi' => 'nullable|string|max:255',
+        ], [
+            'nama_lengkap.required' => 'Nama lengkap wajib diisi.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'no_hp.required' => 'Nomor HP wajib diisi.',
+        ]);
+
+        PesertaKegiatan::updateOrCreate(
             [
                 'user_id' => auth()->id(),
                 'kegiatan_id' => $kegiatan->id,
             ],
-            [
-                'status' => 'terdaftar',
-            ]
+            $validated
         );
 
-        return redirect()
-            ->route('ruang-aksi.detail', $kegiatan->id)
-            ->with('success', 'Kamu berhasil bergabung dengan kegiatan!');
+        return view('pendaftaran-berhasil', compact('kegiatan'));
     }
 
     // VERIFIKASI PESERTA DAN TERBITKAN SERTIFIKAT
@@ -90,10 +140,8 @@ class KegiatanController extends Controller
     {
         $kegiatan = Kegiatan::findOrFail($kegiatanId);
 
-        // Hanya EO pembuat kegiatan yang boleh memverifikasi
         abort_unless($kegiatan->user_id == auth()->id(), 403);
 
-        // Kegiatan harus sudah melewati tanggal pelaksanaan
         abort_if(
             Carbon::parse($kegiatan->tanggal)->isFuture(),
             403,
@@ -104,7 +152,6 @@ class KegiatanController extends Controller
             ->where('kegiatan_id', $kegiatanId)
             ->firstOrFail();
 
-        // Cegah verifikasi dan penerbitan sertifikat berulang
         if ($peserta->status === 'selesai') {
             return back()->with(
                 'success',
@@ -112,12 +159,10 @@ class KegiatanController extends Controller
             );
         }
 
-        // Ubah status peserta
         $peserta->update([
             'status' => 'selesai',
         ]);
 
-        // Terbitkan sertifikat secara otomatis
         Sertifikat::firstOrCreate(
             [
                 'user_id' => $peserta->user_id,
@@ -140,10 +185,8 @@ class KegiatanController extends Controller
     {
         $kegiatan = Kegiatan::findOrFail($id);
 
-        // Hanya pembuat kegiatan yang boleh melihat peserta
         abort_unless($kegiatan->user_id == auth()->id(), 403);
 
-        // Mengambil data peserta beserta akun mereka
         $kegiatan->load('peserta.user');
 
         return view('kegiatan-peserta', compact('kegiatan'));

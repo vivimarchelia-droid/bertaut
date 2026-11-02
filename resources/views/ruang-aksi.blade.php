@@ -78,50 +78,64 @@
         }
 
         .profile-area {
-            display: flex;
-            align-items: center;
-            gap: 13px;
-        }
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    width: fit-content;
+}
 
-        .notification {
-            font-size: 25px;
-            position: relative;
-        }
+.notification {
+    font-size: 25px;
+    position: relative;
+    margin-right: 2px;
+}
 
-        .notification::after {
-            content: "";
-            width: 9px;
-            height: 9px;
-            background: #ff719d;
-            border: 2px solid white;
-            border-radius: 50%;
-            position: absolute;
-            top: 0;
-            right: -2px;
-        }
+.notification::after {
+    content: "";
+    width: 9px;
+    height: 9px;
+    background: #ff719d;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: -2px;
+}
 
-        .profile-avatar {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: #ffc3dd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-        }
+.profile-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: #ffc3dd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    font-weight: 700;
+    color: #073b91;
+    flex-shrink: 0;
+}
 
-        .profile-text strong {
-            display: block;
-            color: #073b91;
-            font-size: 14px;
-        }
+.profile-text {
+    flex: 0 0 auto;
+    margin: 0;
+}
 
-        .profile-text small {
-            color: #7190bd;
-            font-size: 12px;
-        }
+.profile-text strong {
+    display: block;
+    color: #073b91;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
 
+.profile-text small {
+    display: block;
+    color: #7190bd;
+    font-size: 12px;
+    margin-top: 2px;
+}
         /* HERO */
         .hero {
             min-height: 245px;
@@ -679,31 +693,33 @@
     <main class="main-content">
 
         <!-- TOPBAR -->
-        <div class="topbar">
+<div class="topbar">
 
-            <div class="search-box">
-                <span>⌕</span>
+    <div class="search-box">
+        <span>⌕</span>
 
-                <input
-                    type="text"
-                    placeholder="Cari kegiatan, topik, atau pesan..."
-                >
-            </div>
+        <input
+            type="text"
+            placeholder="Cari kegiatan, topik, atau pesan..."
+        >
+    </div>
 
-            <div class="profile-area">
-                <div class="notification">♧</div>
+    <div class="profile-area">
 
-                <div class="profile-avatar">👩🏻</div>
+        <div class="notification">♧</div>
 
-                <div class="profile-text">
-                    <strong>Hai, Salsabila!</strong>
-                    <small>Volunteer</small>
-                </div>
-
-                <span>⌄</span>
-            </div>
-
+        <div class="profile-avatar">
+            {{ strtoupper(substr(auth()->user()->name ?? 'V', 0, 1)) }}
         </div>
+
+        <div class="profile-text">
+            <strong>Hai, {{ auth()->user()->name ?? 'Volunteer' }}!</strong>
+            <small>Volunteer</small>
+        </div>
+
+    </div>
+
+</div>
 
 
         <!-- HERO -->

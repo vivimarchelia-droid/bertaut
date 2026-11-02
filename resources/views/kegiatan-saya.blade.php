@@ -62,102 +62,116 @@
             color: #073b9c;
         }
 
+        .search-box input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #073b9c;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+}
+
+.search-box input::placeholder {
+    color: #7392c5;
+}
+
         .topbar-right {
             display: flex;
             align-items: center;
             gap: 18px;
         }
 
-        .bell {
-            font-size: 29px;
-            position: relative;
-        }
+        .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-        .bell::after {
-            content: "";
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #ff7188;
-            border-radius: 50%;
-            top: 1px;
-            right: -1px;
-        }
+.bell {
+    font-size: 25px;
+    color: #073b9c;
+    position: relative;
+}
 
-        .profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
+.bell::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #ff7188;
+    border-radius: 50%;
+    top: 2px;
+    right: 0;
+}
 
-        .profile-photo {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-            background: #ffd75d;
-        }
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
 
-        .profile-placeholder {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #ffd75d;
-            color: #073b9c;
-            font-size: 20px;
-            font-weight: 700;
-        }
+.profile-photo {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #ffc4dc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #073b9c;
+    font-size: 23px;
+    font-weight: 700;
+}
 
-        .profile-name {
-            font-size: 14px;
-            font-weight: 700;
-            color: #073b9c;
-        }
+.profile-placeholder {
+    background: #ffc4dc;
+}
 
-        .profile-role {
-            font-size: 12px;
-            color: #5275b8;
-        }
+.profile-name {
+    font-size: 14px;
+    font-weight: 800;
+    color: #073b9c;
+}
 
-        .profile-arrow {
-            font-size: 22px;
-            margin-left: 15px;
-        }
+.profile-role {
+    font-size: 12px;
+    color: #7892bd;
+}
 
         /* PAGE HEADER */
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            min-height: 180px;
-            padding: 8px 15px 15px;
-            overflow: hidden;
-        }
+      .page-header {
+    display: flex;
+    align-items: center;
+    min-height: auto;
+    padding: 5px 15px 15px;
+    margin-bottom: 0;
+}
 
         .page-title-area {
             max-width: 650px;
         }
 
         .page-title {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            font-size: 43px;
-            font-weight: 800;
-            color: #073b9c;
-            letter-spacing: -1px;
-        }
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #073b9c;
+    letter-spacing: -1px;
+}
 
-        .calendar-icon {
-            font-size: 56px;
-        }
+       .calendar-icon {
+    font-size: 30px;
+}
 
-        .page-description {
-            margin-top: 12px;
-            font-size: 16px;
-            line-height: 1.7;
-            color: #3970c5;
-        }
+.page-description {
+    margin-top: 5px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #3970c5;
+}
 
         .header-illustration {
             display: flex;
@@ -188,26 +202,30 @@
         }
 
         .tabs {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 24px;
-        }
+    display: flex;
+    width: 100%;
+    gap: 8px;
+    margin-bottom: 24px;
+}
 
-        .tab {
-            flex: 0 1 310px;
-            text-align: center;
-            padding: 15px 20px;
-            border-radius: 12px;
-            background: #ded7ff;
-            color: #5935db;
-            font-size: 14px;
-            font-weight: 700;
-        }
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 15px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 12px;
+    background: #ded7ff;
+    color: #5935db;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+}
 
-        .tab.active {
-            background: linear-gradient(90deg, #8660ed, #7150df);
-            color: white;
-        }
+.tab.active {
+    background: linear-gradient(90deg, #8660ed, #7150df);
+    color: white;
+}
 
         .tab {
             border: none;
@@ -524,38 +542,36 @@
             }
 
             .page-header {
-                min-height: auto;
-                padding: 12px 5px 20px;
-            }
+    display: flex;
+    align-items: center;
+    min-height: auto;
+    padding: 12px 15px 25px;
+}
 
-            .page-title {
-                font-size: 28px;
-                gap: 8px;
-                letter-spacing: -.5px;
-            }
+.page-title-area {
+    max-width: 650px;
+}
 
-            .calendar-icon {
-                font-size: 34px;
-            }
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 32px;
+    font-weight: 800;
+    color: #073b9c;
+    letter-spacing: -1px;
+}
 
-            .page-description {
-                font-size: 11px;
-                line-height: 1.6;
-                margin-top: 7px;
-            }
+.calendar-icon {
+    font-size: 34px;
+}
 
-            .header-illustration {
-                padding-right: 0;
-                gap: 3px;
-            }
-
-            .header-note {
-                display: none;
-            }
-
-            .header-person {
-                font-size: 65px;
-            }
+.page-description {
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #7892bd;
+}
 
             .content-panel {
                 padding: 10px;
@@ -683,233 +699,247 @@
     <!-- MAIN CONTENT -->
     <main class="main-content">
 
-        <!-- TOPBAR -->
-        <div class="topbar">
+ <!-- TOPBAR -->
+<div class="topbar">
 
-            <div class="search-box">
-                <span class="search-icon">⌕</span>
-                <span>Cari kegiatan, komunitas, atau lokasi...</span>
-            </div>
+    <form action="{{ route('kegiatan-saya') }}" method="GET" class="search-box">
+        <span class="search-icon">⌕</span>
 
-            <div class="topbar-right">
-                <div class="bell">♧</div>
+        <input
+            type="text"
+            name="search"
+            value="{{ request('search') }}"
+            placeholder="Cari kegiatan, komunitas, atau lokasi..."
+        >
+    </form>
 
-                <div class="profile">
-                    @if (auth()->user()->profile_photo)
-    <img
-        class="profile-photo"
-        src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
-        alt="Foto profil">
-@else
-    <div class="profile-photo profile-placeholder">
-        {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-    </div>
-@endif
+    <div class="topbar-right">
 
-                    <div>
-                        <div class="profile-name">Hai, {{ auth()->user()->name }}!</div>
-                        <div class="profile-role">Volunteer</div>
-                    </div>
+        <div class="bell">♧</div>
 
-                    <div class="profile-arrow">⌄</div>
+        <div class="profile">
+            @if (auth()->user()->profile_photo)
+                <img
+                    class="profile-photo"
+                    src="{{ asset('storage/' . auth()->user()->profile_photo) }}"
+                    alt="Foto profil">
+            @else
+                <div class="profile-photo profile-placeholder">
+                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                 </div>
-            </div>
+            @endif
 
+            <div>
+                <div class="profile-name">
+                    Hai, {{ auth()->user()->name }}!
+                </div>
+
+                <div class="profile-role">Volunteer</div>
+            </div>
         </div>
 
+    </div>
+
+</div>
+
         <!-- HEADER HALAMAN -->
-        <section class="page-header">
+       <section class="page-header">
+    <div class="page-title-area">
+        <h1 class="page-title">
+            <span class="calendar-icon">📅</span>
+            Kegiatan Saya
+        </h1>
 
-            <div class="page-title-area">
-                <h1 class="page-title">
-                    <span class="calendar-icon">▣</span>
-                    Kegiatan Saya
-                </h1>
-
-                <p class="page-description">
-                    Semua kegiatan yang kamu ikuti maupun yang kamu buat,
-                    ada di sini. Teruslah berkontribusi, karena setiap aksi berarti!
-                </p>
-            </div>
-
-            <div class="header-illustration">
-                <div class="header-note">
-                    Setiap aksi kecil<br>
-                    selalu berarti 💗
-                </div>
-
-                <div class="header-person">👩🏻‍🌾</div>
-            </div>
-
-        </section>
+        <p class="page-description">
+            Semua kegiatan yang kamu ikuti maupun yang kamu buat,
+            ada di sini. Teruslah berkontribusi, karena setiap aksi berarti!
+        </p>
+    </div>
+</section>
 
         <!-- CONTENT -->
         <section class="content-panel">
 
             <div class="tabs">
-                <button type="button" class="tab active" data-tab="diikuti">
-                    Kegiatan yang Diikuti
-                </button>
-                <button type="button" class="tab" data-tab="dibuat">
-                    Kegiatan yang Saya Buat
-                </button>
-            </div>
+    <button type="button" class="tab active" data-tab="diikuti">
+        Kegiatan yang Diikuti
+    </button>
 
-            <!-- KEGIATAN YANG DIIKUTI -->
-            <div class="section tab-content active" id="section-diikuti">
-
-                <h2 class="section-title">Kegiatan yang Diikuti</h2>
-
-                <p class="section-description">
-                    Berikut adalah kegiatan yang sudah kamu ikuti.
-                </p>
-
-                <div class="activities-grid">
-
-                    @forelse ($kegiatanDiikuti as $kegiatan)
-                        @php
-                            $categoryClass = match (strtolower($kegiatan->kategori)) {
-                                'lingkungan' => 'green',
-                                'sosial' => 'purple',
-                                'pendidikan' => 'blue',
-                                'hewan' => 'yellow',
-                                default => 'pink',
-                            };
-                        @endphp
-
-                        <div class="activity-card">
-                            <div class="activity-image-wrapper">
-                                <img
-                                    class="activity-image"
-                                    src="{{ $kegiatan->foto ? asset('storage/' . $kegiatan->foto) : 'https://images.unsplash.com/photo-1599685315640-7c9c5c6e4c4e?w=600' }}"
-                                    alt="{{ $kegiatan->judul }}">
-
-                                <div class="heart">♡</div>
-                            </div>
-
-                            <span class="category {{ $categoryClass }}">
-                                {{ $kegiatan->kategori }}
-                            </span>
-
-                            <h3 class="activity-title">
-                                {{ $kegiatan->judul }}
-                            </h3>
-
-                            <div class="activity-info">
-                                <span>▣</span>
-                                <span>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d M Y') }}</span>
-                            </div>
-
-                            <div class="activity-info">
-                                <span>⌖</span>
-                                <span>{{ $kegiatan->lokasi }}</span>
-                            </div>
-
-                            <span class="status registered">
-                                Sudah Terdaftar
-                            </span>
-                        </div>
-                    @empty
-                        <div class="empty-state">
-                            <div class="empty-icon">🌱</div>
-                            <h3>Belum Ada Kegiatan</h3>
-                            <p>Kamu belum bergabung dengan kegiatan apa pun. Yuk, temukan kegiatan dan mulai berkontribusi!</p>
-                            <a href="{{ route('kegiatan') }}" class="create-button">Jelajahi Kegiatan →</a>
-                        </div>
-                    @endforelse
-
-                </div>
-            </div>
-
-            <!-- KEGIATAN YANG DIBUAT -->
-            <div class="section tab-content" id="section-dibuat">
-
-                <h2 class="section-title">Kegiatan yang Saya Buat</h2>
-
-                <p class="section-description">
-                    Berikut adalah kegiatan yang kamu buat sendiri.
-                </p>
-
-                <div class="activities-grid">
-
-                    @forelse ($kegiatanDibuat as $kegiatan)
-                        @php
-                            $categoryClass = match (strtolower($kegiatan->kategori)) {
-                                'lingkungan' => 'green',
-                                'sosial' => 'purple',
-                                'pendidikan' => 'blue',
-                                'hewan' => 'yellow',
-                                default => 'pink',
-                            };
-                        @endphp
-
-                        <div class="activity-card">
-                            <div class="activity-image-wrapper">
-                                <img
-                                    class="activity-image"
-                                    src="{{ $kegiatan->foto ? asset('storage/' . $kegiatan->foto) : 'https://images.unsplash.com/photo-1558788353-f76d92427f16?w=600' }}"
-                                    alt="{{ $kegiatan->judul }}">
-
-                                <div class="heart">♡</div>
-                            </div>
-
-                            <span class="category {{ $categoryClass }}">
-                                {{ $kegiatan->kategori }}
-                            </span>
-
-                            <h3 class="activity-title">
-                                {{ $kegiatan->judul }}
-                            </h3>
-
-                            <div class="activity-info">
-                                <span>▣</span>
-                                <span>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d M Y') }}</span>
-                            </div>
-
-                            <div class="activity-info">
-                                <span>⌖</span>
-                                <span>{{ $kegiatan->lokasi }}</span>
-                            </div>
-
-                            <span class="status created">
-                                Dibuat oleh Saya
-                            </span>
-
-                            <a href="{{ route('kegiatan.peserta', $kegiatan->id) }}" class="manage-button">
-                                Kelola Peserta →
-                            </a>
-                        </div>
-                    @empty
-                        <div class="empty-state">
-                            <div class="empty-icon">💗</div>
-                            <h3>Belum Ada Kegiatan yang Dibuat</h3>
-                            <p>Kamu belum membuat kegiatan sendiri. Ayo buat kegiatan dan ajak orang lain berbuat kebaikan!</p>
-                            <a href="{{ route('buat-kegiatan') }}" class="create-button">Buat Kegiatan →</a>
-                        </div>
-                    @endforelse
-
-                </div>
-            </div>
-
-        </section>
-
-        <!-- FOOTER BANNER -->
-        <div class="footer-banner">
-            <div class="footer-text">
-                ☀️ Bersama, kita bisa<br>
-                menciptakan dunia yang lebih baik 💗
-            </div>
-
-            <a href="{{ url('/buat-kegiatan') }}" class="create-button">
-                Buat Kegiatan Baru →
-            </a>
-        </div>
-
-    </main>
+    <button type="button" class="tab" data-tab="dibuat">
+        Kegiatan yang Saya Buat
+    </button>
 </div>
+
+<!-- KEGIATAN YANG DIIKUTI -->
+<div class="section tab-content active" id="section-diikuti">
+
+    <h2 class="section-title">Kegiatan yang Diikuti</h2>
+
+    <p class="section-description">
+        Berikut adalah kegiatan yang sudah kamu ikuti.
+    </p>
+
+    <div class="activities-grid">
+
+        @forelse ($kegiatanDiikuti as $kegiatan)
+            @php
+                $categoryClass = match (strtolower($kegiatan->kategori)) {
+                    'lingkungan' => 'green',
+                    'sosial' => 'purple',
+                    'pendidikan' => 'blue',
+                    'hewan' => 'yellow',
+                    default => 'pink',
+                };
+            @endphp
+
+            <div class="activity-card">
+                <div class="activity-image-wrapper">
+                    @if ($kegiatan->foto)
+                        <img
+                            class="activity-image"
+                            src="{{ asset('storage/' . $kegiatan->foto) }}"
+                            alt="{{ $kegiatan->judul }}">
+                    @else
+                        <div class="activity-image" style="background:#dceaff; display:flex; align-items:center; justify-content:center; font-size:45px;">
+                            🌱
+                        </div>
+                    @endif
+
+                    <div class="heart">♡</div>
+                </div>
+
+                <span class="category {{ $categoryClass }}">
+                    {{ $kegiatan->kategori }}
+                </span>
+
+                <h3 class="activity-title">
+                    {{ $kegiatan->judul }}
+                </h3>
+
+                <div class="activity-info">
+                    <span>▣</span>
+                    <span>
+                        {{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d M Y') }}
+                    </span>
+                </div>
+
+                <div class="activity-info">
+                    <span>⌖</span>
+                    <span>{{ $kegiatan->lokasi }}</span>
+                </div>
+
+                <span class="status registered">
+                    Sudah Terdaftar
+                </span>
+            </div>
+
+        @empty
+            <div class="empty-state">
+                <div class="empty-icon">🌱</div>
+                <h3>Belum Ada Kegiatan</h3>
+                <p>
+                    Kamu belum bergabung dengan kegiatan apa pun.
+                    Yuk, temukan kegiatan dan mulai berkontribusi!
+                </p>
+                <a href="{{ route('kegiatan') }}" class="create-button">
+                    Jelajahi Kegiatan →
+                </a>
+            </div>
+        @endforelse
+
+    </div>
+</div>
+
+<!-- KEGIATAN YANG DIBUAT -->
+<div class="section tab-content" id="section-dibuat">
+
+    <h2 class="section-title">Kegiatan yang Saya Buat</h2>
+
+    <p class="section-description">
+        Berikut adalah kegiatan yang kamu buat sendiri.
+    </p>
+
+    <div class="activities-grid">
+
+        @forelse ($kegiatanDibuat as $kegiatan)
+            @php
+                $categoryClass = match (strtolower($kegiatan->kategori)) {
+                    'lingkungan' => 'green',
+                    'sosial' => 'purple',
+                    'pendidikan' => 'blue',
+                    'hewan' => 'yellow',
+                    default => 'pink',
+                };
+            @endphp
+
+            <div class="activity-card">
+                <div class="activity-image-wrapper">
+                    @if ($kegiatan->foto)
+                        <img
+                            class="activity-image"
+                            src="{{ asset('storage/' . $kegiatan->foto) }}"
+                            alt="{{ $kegiatan->judul }}">
+                    @else
+                        <div class="activity-image" style="background:#dceaff; display:flex; align-items:center; justify-content:center; font-size:45px;">
+                            💗
+                        </div>
+                    @endif
+
+                    <div class="heart">♡</div>
+                </div>
+
+                <span class="category {{ $categoryClass }}">
+                    {{ $kegiatan->kategori }}
+                </span>
+
+                <h3 class="activity-title">
+                    {{ $kegiatan->judul }}
+                </h3>
+
+                <div class="activity-info">
+                    <span>▣</span>
+                    <span>
+                        {{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d M Y') }}
+                    </span>
+                </div>
+
+                <div class="activity-info">
+                    <span>⌖</span>
+                    <span>{{ $kegiatan->lokasi }}</span>
+                </div>
+
+                <span class="status created">
+                    Dibuat oleh Saya
+                </span>
+
+                <a
+                    href="{{ route('kegiatan.peserta', $kegiatan->id) }}"
+                    class="manage-button">
+                    Kelola Peserta →
+                </a>
+            </div>
+
+        @empty
+            <div class="empty-state">
+                <div class="empty-icon">💗</div>
+                <h3>Belum Ada Kegiatan yang Dibuat</h3>
+                <p>
+                    Kamu belum membuat kegiatan sendiri.
+                    Ayo buat kegiatan dan ajak orang lain berbuat kebaikan!
+                </p>
+                <a href="{{ route('buat-kegiatan') }}" class="create-button">
+                    Buat Kegiatan →
+                </a>
+            </div>
+        @endforelse
+
+    </div>
+</div>
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const tabButtons = document.querySelectorAll('.tab[data-tab]');
+
         const tabSections = {
             diikuti: document.getElementById('section-diikuti'),
             dibuat: document.getElementById('section-dibuat')
