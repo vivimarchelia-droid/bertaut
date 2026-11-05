@@ -1,4 +1,3 @@
-
 <?php
 
 namespace App\Http\Controllers;
@@ -29,11 +28,18 @@ class KegiatanController extends Controller
             'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
-        $foto = null;
+       $foto = null;
 
-        if ($request->hasFile('foto')) {
-            $foto = $request->file('foto')->store('kegiatan', 'public');
-        }
+if ($request->hasFile('foto')) {
+    $namaFoto = time() . '_' . uniqid() . '.' . $request->file('foto')->getClientOriginalExtension();
+
+    $request->file('foto')->move(
+        public_path('images/kegiatan'),
+        $namaFoto
+    );
+
+    $foto = 'images/kegiatan/' . $namaFoto;
+}
 
         Kegiatan::create([
             'user_id' => auth()->id(),

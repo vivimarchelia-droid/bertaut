@@ -1502,82 +1502,82 @@
         }
 
 
-        function createSummary() {
+function createSummary() {
 
-            const kategori =
-                document.querySelector(
-                    'input[name="kategori"]:checked'
-                );
+    const kategori =
+        document.querySelector(
+            'input[name="kategori"]:checked'
+        );
 
+    const summary =
+        document.getElementById("summary");
 
-            const summary =
-                document.getElementById("summary");
+    summary.innerHTML = `
 
+        <div class="summary-item">
+            <strong>Judul Kegiatan</strong>
+            <span>${getValue("judul")}</span>
+        </div>
 
-            summary.innerHTML = `
+        <div class="summary-item">
+            <strong>Kategori</strong>
+            <span>${kategori ? kategori.value : "-"}</span>
+        </div>
 
-                <div class="summary-item">
-                    <strong>Judul Kegiatan</strong>
-                    <span>
-                        ${getValue("judul")}
-                    </span>
-                </div>
+        <div class="summary-item">
+            <strong>Deskripsi</strong>
+            <span>${getValue("deskripsi")}</span>
+        </div>
 
+        <div class="summary-item">
+            <strong>Tujuan Kegiatan</strong>
+            <span>${getValue("tujuan")}</span>
+        </div>
 
-                <div class="summary-item">
-                    <strong>Kategori</strong>
-                    <span>
-                        ${kategori ? kategori.value : "-"}
-                    </span>
-                </div>
+        <div class="summary-item">
+            <strong>Manfaat bagi Peserta</strong>
+            <span>${getValue("manfaat")}</span>
+        </div>
 
+        <div class="summary-item">
+            <strong>Persyaratan Relawan</strong>
+            <span>${getValue("persyaratan") || "-"}</span>
+        </div>
 
-                <div class="summary-item">
-                    <strong>Deskripsi</strong>
-                    <span>
-                        ${getValue("deskripsi")}
-                    </span>
-                </div>
+        <div class="summary-item">
+            <strong>Perlengkapan yang Dibutuhkan</strong>
+            <span>${getValue("perlengkapan") || "-"}</span>
+        </div>
 
+        <div class="summary-item">
+            <strong>Waktu dan Lokasi</strong>
+            <span>
+                ${getValue("tanggal")}
+                pukul ${getValue("waktu")}
+                <br>
+                ${getValue("lokasi")}
+            </span>
+        </div>
 
-                <div class="summary-item">
-                    <strong>Tujuan Kegiatan</strong>
-                    <span>
-                        ${getValue("tujuan")}
-                    </span>
-                </div>
+        <div class="summary-item">
+            <strong>Link Google Maps</strong>
+            <span>
+                ${getValue("maps") || "-"}
+            </span>
+        </div>
 
+        <div class="summary-item">
+            <strong>Jumlah Relawan</strong>
+            <span>${getValue("jumlah_relawan")} orang</span>
+        </div>
 
-                <div class="summary-item">
-                    <strong>Manfaat bagi Peserta</strong>
-                    <span>
-                        ${getValue("manfaat")}
-                    </span>
-                </div>
+        <div class="summary-item">
+            <strong>Batas Pendaftaran</strong>
+            <span>${getValue("batas_pendaftaran")}</span>
+        </div>
 
-
-                <div class="summary-item">
-                    <strong>Waktu dan Lokasi</strong>
-                    <span>
-                        ${getValue("tanggal")}
-                        pukul
-                        ${getValue("waktu")}
-                        <br>
-                        ${getValue("lokasi")}
-                    </span>
-                </div>
-
-
-                <div class="summary-item">
-                    <strong>Jumlah Relawan</strong>
-                    <span>
-                        ${getValue("jumlah_relawan")} orang
-                    </span>
-                </div>
-
-            `;
-
-        }
+    `;
+}
 
 
     function showFileName(input) {

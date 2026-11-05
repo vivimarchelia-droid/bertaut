@@ -265,9 +265,11 @@
             @if($kegiatan->foto)
 
                 <img
-                    src="{{ asset('storage/' . $kegiatan->foto) }}"
-                    alt="{{ $kegiatan->judul }}"
-                >
+    src="{{ str_starts_with($kegiatan->foto, 'images/')
+        ? asset($kegiatan->foto)
+        : asset('storage/' . $kegiatan->foto) }}"
+    alt="{{ $kegiatan->judul }}"
+>
 
             @else
 
@@ -356,6 +358,41 @@
 
                 </div>
 
+                <div class="info-box">
+
+    <span class="info-label">
+        📝 Batas Pendaftaran
+    </span>
+
+    <span class="info-value">
+        {{ $kegiatan->batas_pendaftaran
+            ? \Carbon\Carbon::parse($kegiatan->batas_pendaftaran)->translatedFormat('d F Y')
+            : '-' }}
+    </span>
+
+</div>
+
+<div class="info-box">
+
+    <span class="info-label">
+        🗺️ Google Maps
+    </span>
+
+    <span class="info-value">
+        @if($kegiatan->maps)
+            <a href="{{ $kegiatan->maps }}"
+               target="_blank"
+               rel="noopener noreferrer"
+               style="color: #073b91; text-decoration: underline;">
+                Lihat Lokasi Kegiatan →
+            </a>
+        @else
+            Belum tersedia
+        @endif
+    </span>
+
+</div>
+
 
             </div>
 
@@ -426,6 +463,34 @@
             </div>
 
             @endif
+
+            @if($kegiatan->maps)
+
+<div class="section">
+
+    <h2>
+        📍 Lokasi Kegiatan di Google Maps
+    </h2>
+
+    <p>
+        Klik tombol berikut untuk melihat lokasi kegiatan
+        dan petunjuk arah menuju tempat acara.
+    </p>
+
+    <a href="{{ $kegiatan->maps }}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="join-button"
+       style="display: inline-block; margin-top: 12px;">
+
+        🗺️ Buka Google Maps
+
+    </a>
+
+</div>
+
+@endif
+
 @if(session('error'))
     <div style="
         background: #ffe0e0;
