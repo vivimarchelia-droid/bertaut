@@ -715,6 +715,22 @@
             color: #073b91;
         }
 
+        .signature-date-value {
+    min-height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #073b91;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.signature-date small {
+    margin-top: 0;
+}
+
         .signature-name {
             height: 25px;
 
@@ -744,13 +760,16 @@
            BUTTON
         ========================================================= */
 
-        .certificate-actions {
-            display: grid;
-            grid-template-columns: .9fr 1.25fr 1.25fr;
-            gap: 12px;
+    .certificate-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 13px;
+}
 
-            margin-top: 13px;
-        }
+.certificate-actions .certificate-action {
+    flex: 0 0 auto;
+}
 
         .certificate-action {
             min-height: 48px;
@@ -1141,8 +1160,17 @@
                     >
 
                         <div class="certificate-thumb">
-                            🏅
-                        </div>
+    @if ($sertifikat->kegiatan->foto)
+        <img
+            src="{{ str_starts_with($sertifikat->kegiatan->foto, 'images/')
+                ? asset($sertifikat->kegiatan->foto)
+                : asset('storage/' . $sertifikat->kegiatan->foto) }}"
+            alt="Foto {{ $sertifikat->kegiatan->judul }}"
+        >
+    @else
+        🏅
+    @endif
+</div>
 
                         <div class="certificate-detail">
                             <h3>{{ $sertifikat->kegiatan->judul }}</h3>
@@ -1275,7 +1303,7 @@
                             <div class="signature">
 
                                 <div class="signature-name">
-                                    Ayu Pratama
+                                    Lia Karinita
                                 </div>
 
                                 <div class="signature-line"></div>
@@ -1287,30 +1315,32 @@
                             </div>
 
 
+                            <div class="signature signature-date">
+
+    <div class="signature-date-value" id="certificateDate">
+        {{ $sertifikats->first()->tanggal_terbit
+            ? $sertifikats->first()->tanggal_terbit->translatedFormat('d F Y')
+            : '-' }}
+    </div>
+
+    <small>Tanggal Terbit</small>
+
+</div>
+
+
                             <div class="signature">
 
-                                <div style="height:22px;"></div>
+    <div class="signature-name" id="organizerName">
+        {{ $sertifikats->first()->kegiatan->user->name ?? 'Penyelenggara Kegiatan' }}
+    </div>
 
-                                <div class="signature-line"></div>
+    <div class="signature-line"></div>
 
-                                <small id="certificateDate">20 September 2025</small>
+    <small>
+        Penanggung Jawab Kegiatan
+    </small>
 
-                            </div>
-
-
-                            <div class="signature">
-
-                                <div class="signature-name">
-                                    Arul.
-                                </div>
-
-                                <div class="signature-line"></div>
-
-                                <small>
-                                    Tim Bertaut
-                                </small>
-
-                            </div>
+</div>
 
                         </div>
 
@@ -1337,10 +1367,7 @@
                         Download Sertifikat
                     </button>
 
-                    <button type="button" class="certificate-action action-share" id="shareCertificate">
-                        ↗️
-                        Bagikan ke Media Sosial
-                    </button>
+                
 
                 </div>
 
@@ -1704,6 +1731,7 @@
                         ? $sertifikat->tanggal_terbit->translatedFormat('d F Y')
                         : '-'),
                     number: @json($sertifikat->nomor_sertifikat),
+                    organizerName: @json($sertifikat->kegiatan->user->name ?? 'Penyelenggara Kegiatan'),
                     icon: '🏅',
                     description: @json('Atas partisipasi dan kontribusi sebagai relawan dalam kegiatan ' . $sertifikat->kegiatan->judul . ' melalui platform Bertaut. Terima kasih telah menjadi bagian dari perubahan positif.')
                 },
@@ -1734,6 +1762,7 @@
                     recipientName.textContent = @json(Auth::user()->name ?? '');
                     description.textContent = cert.description;
                     certificateDate.textContent = cert.date;
+                    document.getElementById('organizerName').textContent = cert.organizerName;
 
                     const selectedItem = items[activeIndex];
                     if (selectedItem) {
@@ -1785,28 +1814,6 @@
                     window.print();
                 });
 
-                document.getElementById('shareCertificate').addEventListener('click', async () => {
-                    const cert = certificates[activeIndex];
-                    const shareText = 'Saya telah menyelesaikan kegiatan ' + cert.title + ' melalui Bertaut. Setiap aksi punya arti! 💙';
-                    try {
-                        if (navigator.share) {
-                            await navigator.share({
-                                title: 'Sertifikat Bertaut - ' + cert.title,
-                                text: shareText,
-                                url: window.location.href
-                            });
-                        } else if (navigator.clipboard && window.isSecureContext) {
-                            await navigator.clipboard.writeText(shareText + ' ' + window.location.href);
-                            alert('Teks berbagi berhasil disalin. Kamu bisa menempelkannya ke media sosial.');
-                        } else {
-                            window.prompt('Salin teks berikut untuk dibagikan:', shareText + ' ' + window.location.href);
-                        }
-                    } catch (error) {
-                        if (error.name !== 'AbortError') {
-                            alert('Sertifikat belum dapat dibagikan. Silakan coba lagi.');
-                        }
-                    }
-                });
 
                 showCertificate(0);
             }

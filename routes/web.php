@@ -245,7 +245,7 @@ Route::get('/kegiatan-saya', function (Request $request) {
 
     // Hanya tampilkan kegiatan yang belum melewati tanggal
     $kegiatanDiikuti->whereDate('tanggal', '>=', today());
-    $kegiatanDibuat->whereDate('tanggal', '>=', today());
+    
 
     $kegiatanDiikuti = $kegiatanDiikuti->latest()->get();
     $kegiatanDibuat = $kegiatanDibuat->latest()->get();
@@ -276,6 +276,18 @@ Route::post('/buat-kegiatan', [KegiatanController::class, 'store'])
     ->middleware('auth')
     ->name('buat-kegiatan.store');
 
+// EDIT DAN HAPUS KEGIATAN MILIK SENDIRI
+Route::get('/kegiatan/{id}/edit', [KegiatanController::class, 'edit'])
+    ->middleware('auth')
+    ->name('kegiatan.edit');
+
+Route::put('/kegiatan/{id}', [KegiatanController::class, 'update'])
+    ->middleware('auth')
+    ->name('kegiatan.update');
+
+Route::delete('/kegiatan/{id}', [KegiatanController::class, 'destroy'])
+    ->middleware('auth')
+    ->name('kegiatan.destroy');
 
 /*
 |--------------------------------------------------------------------------

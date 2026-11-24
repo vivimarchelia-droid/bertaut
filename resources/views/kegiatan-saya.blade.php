@@ -471,6 +471,46 @@
             background: #c5dcff;
         }
 
+        /* TOMBOL EDIT DAN HAPUS KEGIATAN */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+}
+
+.edit-button,
+.delete-button {
+    display: inline-block;
+    padding: 9px 14px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: .2s ease;
+}
+
+.edit-button {
+    background: #dcd2ff;
+    color: #6241d5;
+}
+
+.edit-button:hover {
+    background: #c9baff;
+}
+
+.delete-button {
+    background: #ffd2e6;
+    color: #d83d80;
+}
+
+.delete-button:hover {
+    background: #ffbad8;
+}
+
         /* RESPONSIVE TABLET */
         @media (max-width: 1150px) {
             
@@ -760,6 +800,34 @@
         <!-- CONTENT -->
         <section class="content-panel">
 
+        @if (session('success'))
+    <div style="
+        background: #c8f5df;
+        color: #008866;
+        padding: 13px 18px;
+        border-radius: 12px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        font-weight: 600;
+    ">
+        ✓ {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div style="
+        background: #ffd2e6;
+        color: #d83d80;
+        padding: 13px 18px;
+        border-radius: 12px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        font-weight: 600;
+    ">
+        {{ session('error') }}
+    </div>
+@endif
+
             <div class="tabs">
     <button type="button" class="tab active" data-tab="diikuti">
         Kegiatan yang Diikuti
@@ -797,7 +865,7 @@
                     @if ($kegiatan->foto)
                         <img
                             class="activity-image"
-                            src="{{ asset('storage/' . $kegiatan->foto) }}"
+                            src="{{ str_starts_with($kegiatan->foto, 'images/') ? asset($kegiatan->foto) : asset('storage/' . $kegiatan->foto) }}"
                             alt="{{ $kegiatan->judul }}">
                     @else
                         <div class="activity-image" style="background:#dceaff; display:flex; align-items:center; justify-content:center; font-size:45px;">
@@ -877,7 +945,7 @@
                     @if ($kegiatan->foto)
                         <img
                             class="activity-image"
-                            src="{{ asset('storage/' . $kegiatan->foto) }}"
+                            src="{{ str_starts_with($kegiatan->foto, 'images/') ? asset($kegiatan->foto) : asset('storage/' . $kegiatan->foto) }}"
                             alt="{{ $kegiatan->judul }}">
                     @else
                         <div class="activity-image" style="background:#dceaff; display:flex; align-items:center; justify-content:center; font-size:45px;">
@@ -913,11 +981,36 @@
                 </span>
 
                 <a
-                    href="{{ route('kegiatan.peserta', $kegiatan->id) }}"
-                    class="manage-button">
-                    Kelola Peserta →
-                </a>
-            </div>
+    href="{{ route('kegiatan.peserta', $kegiatan->id) }}"
+    class="manage-button">
+    Kelola Peserta →
+</a>
+
+<div class="action-buttons">
+
+    <!-- TOMBOL EDIT -->
+    <a
+        href="{{ route('kegiatan.edit', $kegiatan->id) }}"
+        class="edit-button">
+        ✏️ Edit
+    </a>
+
+    <!-- TOMBOL HAPUS -->
+    <form
+        action="{{ route('kegiatan.destroy', $kegiatan->id) }}"
+        method="POST"
+        onsubmit="return confirm('Yakin mau menghapus kegiatan ini secara permanen?\n\nSeluruh pendaftaran peserta, pesan Ruang Aksi, dan sertifikat yang berkaitan juga akan dihapus. Tindakan ini tidak dapat dibatalkan!');">
+
+        @csrf
+        @method('DELETE')
+
+        <button type="submit" class="delete-button">
+            🗑️ Hapus
+        </button>
+    </form>
+
+</div>
+</div>
 
         @empty
             <div class="empty-state">

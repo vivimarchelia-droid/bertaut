@@ -10,24 +10,31 @@ use App\Events\PesanKegiatanDikirim;
 
 class RuangAksiController extends Controller
 {
-    public function index()
+    // Mengambil daftar kegiatan yang dibuat atau diikuti pengguna
+    private function daftarKegiatan()
     {
-        $kegiatans = Kegiatan::where('user_id', auth()->id())
-            ->orWhereIn('id', PesertaKegiatan::where('user_id', auth()->id())
-                ->pluck('kegiatan_id'))
+        return Kegiatan::where('user_id', auth()->id())
+            ->orWhereIn(
+                'id',
+                PesertaKegiatan::where('user_id', auth()->id())
+                    ->pluck('kegiatan_id')
+            )
             ->latest()
             ->get();
+    }
+
+    // Halaman utama Ruang Aksi
+    public function index()
+    {
+        $kegiatans = $this->daftarKegiatan();
 
         return view('ruang-aksi', compact('kegiatans'));
     }
 
-    public function show($id)
+    // Membuka room kegiatan
+    public function show(Request $request, $id)
     {
-        $kegiatans = Kegiatan::where('user_id', auth()->id())
-            ->orWhereIn('id', PesertaKegiatan::where('user_id', auth()->id())
-                ->pluck('kegiatan_id'))
-            ->latest()
-            ->get();
+        $kegiatans = $this->daftarKegiatan();
 
         $kegiatan = $kegiatans->firstWhere('id', $id);
 
@@ -40,9 +47,43 @@ class RuangAksiController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
 
-        return view('ruang-aksi', compact('kegiatans', 'kegiatan', 'pesans'));
+        // Jika permintaan berasal dari AJAX, kirim data dalam JSON
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'kegiatan' => [
+                    'id' => $kegiatan->id,
+                    'judul' => $kegiatan->judul,
+                    'lokasi' => $kegiatan->lokasi,
+                    'tanggal' => \Carbon\Carbon::parse($kegiatan->tanggal)
+                        ->translatedFormat('l, d F Y'),
+                    'foto' => $kegiatan->foto
+                        ? (
+                            str_starts_with($kegiatan->foto, 'images/')
+                                ? asset($kegiatan->foto)
+                                : asset('storage/' . $kegiatan->foto)
+                        )
+                        : null,
+                ],
+                'pesans' => $pesans->map(function ($pesan) {
+                    return [
+                        'user_id' => $pesan->user_id,
+                        'nama' => $pesan->user->name,
+                        'pesan' => $pesan->pesan,
+                        'waktu' => $pesan->created_at->format('H:i'),
+                    ];
+                }),
+            ]);
+        }
+
+        return view('ruang-aksi', compact(
+            'kegiatans',
+            'kegiatan',
+            'pesans'
+        ));
     }
 
+    // Mengirim pesan
     public function storeMessage(Request $request, $id)
     {
         $request->validate([
@@ -72,6 +113,7 @@ class RuangAksiController extends Controller
         return response()->json([
             'success' => true,
             'pesan' => $pesan->pesan,
+            'nama' => auth()->user()->name,
             'waktu' => $pesan->created_at->format('H:i'),
         ]);
     }

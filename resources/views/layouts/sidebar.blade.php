@@ -175,8 +175,8 @@
     font-weight: 500;
 
     transition:
-        background 0.2s ease,
-        color 0.2s ease;
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
 .bertaut-menu:hover {
@@ -484,66 +484,127 @@
 
 
     /* =========================================================
-       TABLET
-       ========================================================= */
+   HAMBURGER MENU UNTUK TABLET DAN HP
+   ========================================================= */
 
-    @media (max-width: 1000px) {
+.mobile-menu-header,
+.mobile-menu-overlay {
+    display: none;
+}
 
-        .sidebar-bertaut {
-            position: relative;
+@media (max-width: 1000px) {
 
-            top: 0;
-            left: 0;
-
-            width: 100%;
-            min-width: 100%;
-            max-width: 100%;
-
-            height: auto;
-
-            padding: 15px;
-
-            overflow: visible;
-        }
-
-        .bertaut-navigation {
-            display: grid;
-
-            grid-template-columns: repeat(3, 1fr);
-
-            gap: 6px;
-        }
-
-        .bertaut-menu,
-        .bertaut-logout {
-            height: 45px;
-        }
-
-        .bertaut-sidebar-bottom {
-            display: none;
-        }
-
-        .bertaut-divider {
-            display: none;
-        }
+    /* HEADER ATAS HP */
+    .mobile-menu-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 65px;
+        padding: 0 18px;
+        background: #ffffff;
+        position: sticky;
+        top: 0;
+        z-index: 1001;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.06);
     }
 
-
-    /* =========================================================
-       HP
-       ========================================================= */
-
-    @media (max-width: 600px) {
-
-        .bertaut-navigation {
-            grid-template-columns: repeat(2, 1fr);
-        }
-
-        .bertaut-menu,
-        .bertaut-logout {
-            height: 43px;
-        }
+    .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 9px;
     }
+
+    .mobile-brand .bertaut-logo {
+        margin-right: 0;
+    }
+
+    .mobile-brand h2 {
+        margin: 0;
+        color: #073b91;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    /* TOMBOL HAMBURGER */
+    .mobile-menu-button {
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 10px;
+        background: #eaf2ff;
+        color: #073b91;
+        font-size: 25px;
+        cursor: pointer;
+    }
+
+    /* SIDEBAR BERUBAH MENJADI MENU SAMPING */
+    .sidebar-bertaut {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 270px;
+        min-width: 270px;
+        max-width: 270px;
+        height: 100vh;
+        height: 100dvh;
+        padding: 20px 14px;
+        z-index: 1003;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar-bertaut.mobile-open {
+        transform: translateX(0);
+    }
+
+    /* NAVIGASI TETAP VERTIKAL */
+    .bertaut-navigation {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .bertaut-menu,
+    .bertaut-logout {
+        height: 45px;
+        flex-shrink: 0;
+    }
+
+    .bertaut-sidebar-bottom {
+        display: block;
+    }
+
+    .bertaut-divider {
+        display: block;
+    }
+
+    /* LAPISAN GELAP DI BELAKANG MENU */
+    .mobile-menu-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        z-index: 1002;
+        opacity: 0;
+        visibility: hidden;
+        transition: 0.3s ease;
+    }
+
+    .mobile-menu-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* CONTENT MEMAKAI LEBAR LAYAR */
+    .dashboard-layout > .main-content,
+    .app-container > .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        min-height: calc(100vh - 65px);
+    }
+}
 
 /* =========================================================
    MEMBERI RUANG UNTUK SIDEBAR
@@ -722,7 +783,54 @@
     min-height: 100vh;
 }
 
+/* FIX FINAL TAMPILAN HP */
+@media (max-width: 1000px) {
+
+    .dashboard-layout > .main-content,
+    .app-container > .main-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        min-height: calc(100vh - 65px);
+    }
+
+}
+
 </style>
+
+
+<!-- =========================================================
+     HTML SIDEBAR BERTAUT
+     ========================================================= -->
+
+
+<!-- =========================================================
+     HEADER KHUSUS HP
+     ========================================================= -->
+
+<div class="mobile-menu-header">
+
+    <div class="mobile-brand">
+        <div class="bertaut-logo"></div>
+        <h2>Bertaut.</h2>
+    </div>
+
+    <button
+        type="button"
+        class="mobile-menu-button"
+        id="mobileMenuButton"
+        aria-label="Buka menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+</div>
+
+<!-- BACKGROUND MENU -->
+<div
+    class="mobile-menu-overlay"
+    id="mobileMenuOverlay"
+></div>
 
 
 <!-- =========================================================
@@ -747,13 +855,11 @@
     <!-- NAVIGATION -->
     <nav class="bertaut-navigation">
 
-
         <!-- DASHBOARD -->
         <a
             href="{{ route('dashboard') }}"
             class="bertaut-menu {{ request()->routeIs('dashboard') ? 'active' : '' }}"
         >
-
             <span class="bertaut-menu-icon">
                 <svg viewBox="0 0 24 24">
                     <path d="M3 10.5L12 3l9 7.5"></path>
@@ -762,10 +868,7 @@
                 </svg>
             </span>
 
-            <span class="bertaut-menu-text">
-                Dashboard
-            </span>
-
+            <span class="bertaut-menu-text">Dashboard</span>
         </a>
 
 
@@ -774,7 +877,6 @@
             href="{{ route('kegiatan') }}"
             class="bertaut-menu {{ request()->routeIs('kegiatan') ? 'active' : '' }}"
         >
-
             <span class="bertaut-menu-icon">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="12" r="8"></circle>
@@ -782,10 +884,7 @@
                 </svg>
             </span>
 
-            <span class="bertaut-menu-text">
-                Jelajahi Kegiatan
-            </span>
-
+            <span class="bertaut-menu-text">Jelajahi Kegiatan</span>
         </a>
 
 
@@ -794,7 +893,6 @@
             href="{{ route('kegiatan-saya') }}"
             class="bertaut-menu {{ request()->routeIs('kegiatan-saya') ? 'active' : '' }}"
         >
-
             <span class="bertaut-menu-icon">
                 <svg viewBox="0 0 24 24">
                     <rect x="4" y="5" width="16" height="16" rx="2"></rect>
@@ -805,56 +903,55 @@
                 </svg>
             </span>
 
-            <span class="bertaut-menu-text">
-                Kegiatan Saya
-            </span>
-
+            <span class="bertaut-menu-text">Kegiatan Saya</span>
         </a>
 
-        <a href="{{ route('buat-kegiatan') }}" class="bertaut-menu {{ request()->routeIs('buat-kegiatan') ? 'active' : '' }}">
-    <span class="bertaut-menu-icon">
-        <svg viewBox="0 0 24 24">
-            <path d="M12 5v14M5 12h14"></path>
-        </svg>
-    </span>
 
-    <span class="bertaut-menu-text">Buat Kegiatan</span>
-</a>
+        <!-- BUAT KEGIATAN -->
+        <a
+            href="{{ route('buat-kegiatan') }}"
+            class="bertaut-menu {{ request()->routeIs('buat-kegiatan') ? 'active' : '' }}"
+        >
+            <span class="bertaut-menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 5v14M5 12h14"></path>
+                </svg>
+            </span>
+
+            <span class="bertaut-menu-text">Buat Kegiatan</span>
+        </a>
+
 
         <!-- RUANG AKSI -->
-<a
-    href="{{ route('ruang-aksi') }}"
-    class="bertaut-menu {{ request()->routeIs('ruang-aksi*') ? 'active' : '' }}"
->
-    <span class="bertaut-menu-icon">
-        <svg viewBox="0 0 24 24">
-            <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H8l-4 3v-5.2A7.5 7.5 0 1 1 20 11.5z"></path>
-            <path d="M8 11h.01"></path>
-            <path d="M12 11h.01"></path>
-            <path d="M16 11h.01"></path>
-        </svg>
-    </span>
+        <a
+            href="{{ route('ruang-aksi') }}"
+            class="bertaut-menu {{ request()->routeIs('ruang-aksi*') ? 'active' : '' }}"
+        >
+            <span class="bertaut-menu-icon">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H8l-4 3v-5.2A7.5 7.5 0 1 1 20 11.5z"></path>
+                    <path d="M8 11h.01"></path>
+                    <path d="M12 11h.01"></path>
+                    <path d="M16 11h.01"></path>
+                </svg>
+            </span>
 
-    <span class="bertaut-menu-text">Ruang Aksi</span>
+            <span class="bertaut-menu-text">Ruang Aksi</span>
+        </a>
 
-</a>
 
         <!-- SERTIFIKAT -->
         <a
             href="{{ route('sertifikat') }}"
             class="bertaut-menu {{ request()->routeIs('sertifikat') ? 'active' : '' }}"
         >
-
             <span class="bertaut-menu-icon">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 3l2.8 5.7 6.2.9-4.5 4.4 1.1 6.2L12 17.3 6.4 20.2l1.1-6.2L3 9.6l6.2-.9L12 3z"></path>
                 </svg>
             </span>
 
-            <span class="bertaut-menu-text">
-                Sertifikat
-            </span>
-
+            <span class="bertaut-menu-text">Sertifikat</span>
         </a>
 
 
@@ -863,7 +960,6 @@
             href="{{ route('profil') }}"
             class="bertaut-menu {{ request()->routeIs('profil') ? 'active' : '' }}"
         >
-
             <span class="bertaut-menu-icon">
                 <svg viewBox="0 0 24 24">
                     <circle cx="12" cy="8" r="4"></circle>
@@ -871,12 +967,8 @@
                 </svg>
             </span>
 
-            <span class="bertaut-menu-text">
-                Profil
-            </span>
-
+            <span class="bertaut-menu-text">Profil</span>
         </a>
-
 
     </nav>
 
@@ -886,47 +978,90 @@
 
 
     <!-- LOGOUT -->
-    <form action="{{ route('logout') }}" method="POST" class="bertaut-logout-form">
-    @csrf
+    <form
+        action="{{ route('logout') }}"
+        method="POST"
+        class="bertaut-logout-form"
+    >
+        @csrf
 
-    <button type="submit" class="bertaut-logout">
-        <span class="bertaut-menu-icon">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M10 17l5-5-5-5"></path>
-                <path d="M15 12H3"></path>
-                <path d="M21 3v18"></path>
-            </svg>
-        </span>
+        <button type="submit" class="bertaut-logout">
 
-        <span class="bertaut-menu-text">Logout</span>
-    </button>
-</form>
+            <span class="bertaut-menu-icon">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M10 17l5-5-5-5"></path>
+                    <path d="M15 12H3"></path>
+                    <path d="M21 3v18"></path>
+                </svg>
+            </span>
+
+            <span class="bertaut-menu-text">Logout</span>
+
+        </button>
+    </form>
 
 
-    <!-- BAGIAN BAWAH -->
+    <!-- ILUSTRASI SIDEBAR -->
     <div class="bertaut-sidebar-bottom">
 
-
-        <!--
-            ILUSTRASI SIDEBAR
-
-            Simpan gambar ilustrasi kamu di:
-            public/images/sidebar-illustration.png
-        -->
-
         <div class="bertaut-sidebar-illustration">
-
-           <div class="bertaut-sidebar-illustration">
-    <img
-        src="{{ asset('images/kucing.png') }}"
-        alt="Bertaut Illustration"
-        loading="eager"
-        decoding="async"
-    >
-</div>
-
+            <img
+                src="{{ asset('images/kucing.png') }}"
+                alt="Bertaut Illustration"
+                loading="eager"
+                decoding="async"
+            >
         </div>
 
     </div>
 
 </aside>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const sidebar = document.querySelector('.sidebar-bertaut');
+    const menuButton = document.getElementById('mobileMenuButton');
+    const overlay = document.getElementById('mobileMenuOverlay');
+
+    if (!sidebar || !menuButton || !overlay) return;
+
+    function openMenu() {
+        sidebar.classList.add('mobile-open');
+        overlay.classList.add('show');
+        menuButton.innerHTML = '×';
+        menuButton.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMenu() {
+        sidebar.classList.remove('mobile-open');
+        overlay.classList.remove('show');
+        menuButton.innerHTML = '☰';
+        menuButton.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+    }
+
+    menuButton.addEventListener('click', function () {
+        if (sidebar.classList.contains('mobile-open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    overlay.addEventListener('click', closeMenu);
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') {
+            closeMenu();
+        }
+    });
+
+    sidebar.querySelectorAll('.bertaut-menu').forEach(function (menu) {
+        menu.addEventListener('click', closeMenu);
+    });
+
+});
+</script>

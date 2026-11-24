@@ -625,11 +625,14 @@
            PANEL MOTIVASI
         ===================================================== */
 
-        .motivation-card {
+     .motivation-card {
     margin-top: 14px;
     min-height: 330px;
     border-radius: 23px;
-    background: linear-gradient(135deg, #ffbed7, #ffd5e7);
+    background-image: url('/images/Hands Together in Support.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     padding: 24px;
     position: relative;
     overflow: hidden;
@@ -1008,7 +1011,7 @@
             <div class="activity-image green">
                 @if($item->foto)
                     <img
-                        src="{{ asset('storage/' . $item->foto) }}"
+                        src="{{ str_starts_with($item->foto, 'images/') ? asset($item->foto) : asset('storage/' . $item->foto) }}"
                         alt="{{ $item->judul }}"
                         style="width:100%; height:100%; object-fit:cover;"
                     >
@@ -1093,7 +1096,7 @@
 
             @if($item->foto)
                 <img
-                    src="{{ asset('storage/' . $item->foto) }}"
+                    src="{{ str_starts_with($item->foto, 'images/') ? asset($item->foto) : asset('storage/' . $item->foto) }}"
                     class="my-activity-photo"
                     alt="{{ $item->judul }}"
                 >
@@ -1152,10 +1155,6 @@
                            class="motivation-button">
                             Mulai cari kegiatan →
                         </a>
-
-                        <div class="motivation-decoration">
-                            🤝
-                        </div>
 
                     </section>
 

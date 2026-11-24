@@ -609,6 +609,18 @@
             }
         }
 
+        .field-error {
+    color: #e05252;
+    font-size: 12px;
+    margin-top: 6px;
+    display: block;
+    font-weight: 500;
+}
+
+.field-invalid {
+    border: 1.5px solid #e05252 !important;
+    box-shadow: 0 0 0 3px rgba(224, 82, 82, 0.08);
+}
     </style>
 </head>
 
@@ -721,474 +733,274 @@
                  @csrf
 
 
-                    <!-- STEP 1 -->
+                    
+<!-- STEP 1 -->
+<div class="step active" data-step="1">
+
+    <div class="step-heading">
+        <div class="step-icon">📝</div>
+        <h2>Informasi Dasar</h2>
+    </div>
+
+    <p class="step-description">
+        Mulai dengan informasi utama tentang kegiatanmu.
+    </p>
+
+    <div class="form-group">
+        <label for="judul">Judul Kegiatan *</label>
+        <input
+            type="text"
+            id="judul"
+            name="judul"
+            placeholder="Contoh: Aksi Bersih-Bersih Sungai"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label>Pilih Kategori *</label>
+
+        <div class="category-list">
+            <label class="category">
+                <input type="radio" name="kategori" value="Lingkungan" required>
+                <span>🌱</span>
+                <small>Lingkungan</small>
+            </label>
+
+            <label class="category">
+                <input type="radio" name="kategori" value="Pendidikan">
+                <span>📚</span>
+                <small>Pendidikan</small>
+            </label>
+
+            <label class="category">
+                <input type="radio" name="kategori" value="Sosial">
+                <span>🤝</span>
+                <small>Sosial</small>
+            </label>
+
+            <label class="category">
+                <input type="radio" name="kategori" value="Kesehatan">
+                <span>💗</span>
+                <small>Kesehatan</small>
+            </label>
+
+            <label class="category">
+                <input type="radio" name="kategori" value="Hewan">
+                <span>🐾</span>
+                <small>Hewan</small>
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="deskripsi">Deskripsi Kegiatan *</label>
+        <textarea
+            id="deskripsi"
+            name="deskripsi"
+            placeholder="Ceritakan secara singkat tentang kegiatan yang ingin kamu buat..."
+            required
+        ></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="tujuan">Tujuan Kegiatan *</label>
+        <textarea
+            id="tujuan"
+            name="tujuan"
+            placeholder="Apa tujuan yang ingin dicapai dari kegiatan ini?"
+            required
+        ></textarea>
+    </div>
+
+    <div class="button-area">
+        <button type="button" class="btn btn-next" onclick="nextStep()">
+            Lanjut ke Detail Kegiatan →
+        </button>
+    </div>
+
+</div>
+
+
+<!-- STEP 2 -->
+<div class="step" data-step="2">
+
+    <div class="step-heading">
+        <div class="step-icon">📋</div>
+        <h2>Detail Kegiatan</h2>
+    </div>
+
+    <p class="step-description">
+        Lengkapi informasi agar calon relawan lebih memahami kegiatanmu.
+    </p>
+
+    <div class="form-group">
+        <label for="manfaat">Manfaat bagi Peserta *</label>
+        <textarea
+            id="manfaat"
+            name="manfaat"
+            placeholder="Apa manfaat yang akan didapatkan oleh relawan?"
+            required
+        ></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="persyaratan">Persyaratan Relawan *</label>
+        <textarea
+            id="persyaratan"
+            name="persyaratan"
+            placeholder="Contoh: Membawa botol minum pribadi dan memakai pakaian nyaman..."
+            required
+        ></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="perlengkapan">Perlengkapan yang Dibutuhkan *</label>
+        <textarea
+            id="perlengkapan"
+            name="perlengkapan"
+            placeholder="Tuliskan perlengkapan yang perlu dibawa relawan..."
+            required
+        ></textarea>
+    </div>
+
+    <div class="button-area">
+        <button type="button" class="btn btn-back" onclick="prevStep()">
+            ← Kembali
+        </button>
+
+        <button type="button" class="btn btn-next" onclick="nextStep()">
+            Lanjut ke Lokasi & Waktu →
+        </button>
+    </div>
+
+</div>
+
+
+<!-- STEP 3 -->
+<div class="step" data-step="3">
+
+    <div class="step-heading">
+        <div class="step-icon">📍</div>
+        <h2>Lokasi & Waktu</h2>
+    </div>
+
+    <p class="step-description">
+        Tentukan kapan dan di mana kegiatan akan dilaksanakan.
+    </p>
+
+    <div class="two-column">
+
+        <div class="form-group">
+            <label for="tanggal">Tanggal Kegiatan *</label>
+            <input
+                type="date"
+                id="tanggal"
+                name="tanggal"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="waktu">Waktu Kegiatan *</label>
+            <input
+                type="time"
+                id="waktu"
+                name="waktu"
+                required
+            >
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <label for="lokasi">Lokasi Kegiatan *</label>
+        <input
+            type="text"
+            id="lokasi"
+            name="lokasi"
+            placeholder="Contoh: Taman Kota Palembang"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+    <label for="maps">Link Google Maps *</label>
+    <input
+        type="url"
+        id="maps"
+        name="maps"
+        placeholder="Tempel link Google Maps di sini"
+        required
+    >
+    <small class="field-hint">
+        Link Google Maps wajib diisi.
+    </small>
+</div>
+
+    <div class="form-group">
+        <label for="jumlah_relawan">Jumlah Relawan yang Dibutuhkan *</label>
+        <input
+            type="number"
+            id="jumlah_relawan"
+            name="jumlah_relawan"
+            min="1"
+            placeholder="Contoh: 50"
+            required
+        >
+    </div>
+
+    <div class="form-group">
+        <label for="batas_pendaftaran">Batas Pendaftaran *</label>
+        <input
+            type="date"
+            id="batas_pendaftaran"
+            name="batas_pendaftaran"
+            required
+        >
+    </div>
+
+    <div class="button-area">
+        <button type="button" class="btn btn-back" onclick="prevStep()">
+            ← Kembali
+        </button>
+
+        <button type="button" class="btn btn-next" onclick="nextStep()">
+            Lanjut ke Publikasi →
+        </button>
+    </div>
+
+</div>
+
+
+<!-- STEP 4 -->
+<div class="step" data-step="4">
+
+    <div class="step-heading">
+        <div class="step-icon">🚀</div>
+        <h2>Publikasi Kegiatan</h2>
+    </div>
+
+    <p class="step-description">
+        Periksa kembali informasi kegiatanmu sebelum dipublikasikan.
+    </p>
+
+    <div id="summary"></div>
+
+    <div class="button-area">
+        <button type="button" class="btn btn-back" onclick="prevStep()">
+            ← Kembali
+        </button>
+
+        <button type="submit" class="btn btn-submit">
+            Publikasikan Kegiatan 🚀
+        </button>
+    </div>
+
+</div>
+</form>
+</section>
 
-                    <div class="step active" data-step="1">
-
-                        <div class="step-heading">
-
-                            <div class="step-icon">
-                                📝
-                            </div>
-
-                            <h2>
-                                Informasi Dasar
-                            </h2>
-
-                        </div>
-
-                        <p class="step-description">
-                            Mulai dengan informasi utama tentang kegiatanmu.
-                        </p>
-
-
-                        <div class="form-group">
-
-                            <label for="judul">
-                                Judul Kegiatan *
-                            </label>
-
-                            <input
-                                type="text"
-                                id="judul"
-                                name="judul"
-                                placeholder="Contoh: Aksi Bersih-Bersih Sungai"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label>
-                                Pilih Kategori *
-                            </label>
-
-                            <div class="category-list">
-
-                                <label class="category">
-
-                                    <input
-                                        type="radio"
-                                        name="kategori"
-                                        value="Lingkungan"
-                                        required
-                                    >
-
-                                    <span>🌱</span>
-
-                                    <small>
-                                        Lingkungan
-                                    </small>
-
-                                </label>
-
-
-                                <label class="category">
-
-                                    <input
-                                        type="radio"
-                                        name="kategori"
-                                        value="Pendidikan"
-                                    >
-
-                                    <span>📚</span>
-
-                                    <small>
-                                        Pendidikan
-                                    </small>
-
-                                </label>
-
-
-                                <label class="category">
-
-                                    <input
-                                        type="radio"
-                                        name="kategori"
-                                        value="Sosial"
-                                    >
-
-                                    <span>🤝</span>
-
-                                    <small>
-                                        Sosial
-                                    </small>
-
-                                </label>
-
-
-                                <label class="category">
-
-                                    <input
-                                        type="radio"
-                                        name="kategori"
-                                        value="Kesehatan"
-                                    >
-
-                                    <span>💗</span>
-
-                                    <small>
-                                        Kesehatan
-                                    </small>
-
-                                </label>
-
-
-                                <label class="category">
-
-                                    <input
-                                        type="radio"
-                                        name="kategori"
-                                        value="Hewan"
-                                    >
-
-                                    <span>🐾</span>
-
-                                    <small>
-                                        Hewan
-                                    </small>
-
-                                </label>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="deskripsi">
-                                Deskripsi Kegiatan *
-                            </label>
-
-                            <textarea
-                                id="deskripsi"
-                                name="deskripsi"
-                                placeholder="Ceritakan secara singkat tentang kegiatan yang ingin kamu buat..."
-                                required
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="tujuan">
-                                Tujuan Kegiatan *
-                            </label>
-
-                            <textarea
-                                id="tujuan"
-                                name="tujuan"
-                                placeholder="Apa tujuan yang ingin dicapai dari kegiatan ini?"
-                                required
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="button-area">
-
-                            <button
-                                type="button"
-                                class="btn btn-next"
-                                onclick="nextStep()"
-                            >
-                                Lanjut ke Detail Kegiatan →
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- STEP 2 -->
-
-                    <div class="step" data-step="2">
-
-                        <div class="step-heading">
-
-                            <div class="step-icon">
-                                📋
-                            </div>
-
-                            <h2>
-                                Detail Kegiatan
-                            </h2>
-
-                        </div>
-
-                        <p class="step-description">
-                            Lengkapi informasi agar calon relawan lebih memahami kegiatanmu.
-                        </p>
-
-
-                        <div class="form-group">
-
-                            <label for="manfaat">
-                                Manfaat bagi Peserta *
-                            </label>
-
-                            <textarea
-                                id="manfaat"
-                                name="manfaat"
-                                placeholder="Apa manfaat yang akan didapatkan oleh relawan?"
-                                required
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="persyaratan">
-                                Persyaratan Relawan
-                            </label>
-
-                            <textarea
-                                id="persyaratan"
-                                name="persyaratan"
-                                placeholder="Contoh: Membawa botol minum pribadi dan memakai pakaian nyaman..."
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="perlengkapan">
-                                Perlengkapan yang Dibutuhkan
-                            </label>
-
-                            <textarea
-                                id="perlengkapan"
-                                name="perlengkapan"
-                                placeholder="Tuliskan perlengkapan yang perlu dibawa relawan..."
-                            ></textarea>
-
-                        </div>
-
-
-                        <div class="button-area">
-
-                            <button
-                                type="button"
-                                class="btn btn-back"
-                                onclick="prevStep()"
-                            >
-                                ← Kembali
-                            </button>
-
-                            <button
-                                type="button"
-                                class="btn btn-next"
-                                onclick="nextStep()"
-                            >
-                                Lanjut ke Lokasi & Waktu →
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- STEP 3 -->
-
-                    <div class="step" data-step="3">
-
-                        <div class="step-heading">
-
-                            <div class="step-icon">
-                                📍
-                            </div>
-
-                            <h2>
-                                Lokasi & Waktu
-                            </h2>
-
-                        </div>
-
-                        <p class="step-description">
-                            Tentukan kapan dan di mana kegiatan akan dilaksanakan.
-                        </p>
-
-
-                        <div class="two-column">
-
-                            <div class="form-group">
-
-                                <label for="tanggal">
-                                    Tanggal Kegiatan *
-                                </label>
-
-                                <input
-                                    type="date"
-                                    id="tanggal"
-                                    name="tanggal"
-                                    required
-                                >
-
-                            </div>
-
-
-                            <div class="form-group">
-
-                                <label for="waktu">
-                                    Waktu Kegiatan *
-                                </label>
-
-                                <input
-                                    type="time"
-                                    id="waktu"
-                                    name="waktu"
-                                    required
-                                >
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="lokasi">
-                                Lokasi Kegiatan *
-                            </label>
-
-                            <input
-                                type="text"
-                                id="lokasi"
-                                name="lokasi"
-                                placeholder="Contoh: Taman Kota Palembang"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="maps">
-                                Link Google Maps
-                            </label>
-
-                            <input
-                                type="url"
-                                id="maps"
-                                name="maps"
-                                placeholder="Tempel link Google Maps di sini"
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="jumlah_relawan">
-                                Jumlah Relawan yang Dibutuhkan *
-                            </label>
-
-                            <input
-                                type="number"
-                                id="jumlah_relawan"
-                                name="jumlah_relawan"
-                                min="1"
-                                placeholder="Contoh: 50"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="form-group">
-
-                            <label for="batas_pendaftaran">
-                                Batas Pendaftaran *
-                            </label>
-
-                            <input
-                                type="date"
-                                id="batas_pendaftaran"
-                                name="batas_pendaftaran"
-                                required
-                            >
-
-                        </div>
-
-
-                        <div class="button-area">
-
-                            <button
-                                type="button"
-                                class="btn btn-back"
-                                onclick="prevStep()"
-                            >
-                                ← Kembali
-                            </button>
-
-                            <button
-                                type="button"
-                                class="btn btn-next"
-                                onclick="nextStep()"
-                            >
-                                Lanjut ke Publikasi →
-                            </button>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- STEP 4 -->
-
-                    <div class="step" data-step="4">
-
-                        <div class="step-heading">
-
-                            <div class="step-icon">
-                                🚀
-                            </div>
-
-                            <h2>
-                                Publikasi Kegiatan
-                            </h2>
-
-                        </div>
-
-                        <p class="step-description">
-                            Periksa kembali informasi kegiatanmu sebelum dipublikasikan.
-                        </p>
-
-
-                        <div id="summary"></div>
-
-
-                        <div class="button-area">
-
-                            <button
-                                type="button"
-                                class="btn btn-back"
-                                onclick="prevStep()"
-                            >
-                                ← Kembali
-                            </button>
-
-                            <button
-                                type="submit"
-                                class="btn btn-submit"
-                            >
-                                Publikasikan Kegiatan 🚀
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                </form>
-
-            </section>
 
 
             <!-- SIDEBAR KANAN -->
@@ -1446,37 +1258,52 @@
         }
 
 
-        function nextStep() {
+function nextStep() {
+    const currentFormStep = document.querySelector(
+        `.step[data-step="${currentStep}"]`
+    );
 
-            const currentFormStep =
-                document.querySelector(
-                    `.step[data-step="${currentStep}"]`
-                );
+    if (!currentFormStep) return;
 
+    const requiredFields = currentFormStep.querySelectorAll(
+        'input[required], textarea[required], select[required]'
+    );
 
-            const requiredFields =
-                currentFormStep.querySelectorAll("[required]");
+    let firstInvalidField = null;
 
+    requiredFields.forEach(function(field) {
+        const oldError = field.parentElement.querySelector('.field-error');
 
-            for (const field of requiredFields) {
+        if (oldError) oldError.remove();
 
-                if (!field.checkValidity()) {
+        field.classList.remove('field-invalid');
 
-                    field.reportValidity();
+        if (!field.checkValidity() || !field.value.trim()) {
+            field.classList.add('field-invalid');
 
-                    return;
-                }
+            const error = document.createElement('small');
+            error.className = 'field-error';
+            error.textContent = field.value.trim()
+                ? 'Format isian belum benar.'
+                : 'Kolom ini wajib diisi.';
 
+            field.insertAdjacentElement('afterend', error);
+
+            if (!firstInvalidField) {
+                firstInvalidField = field;
             }
-
-
-            if (currentStep < 4) {
-
-                showStep(currentStep + 1);
-
-            }
-
         }
+    });
+
+    if (firstInvalidField) {
+        firstInvalidField.focus();
+        return;
+    }
+
+    if (currentStep < 4) {
+        showStep(currentStep + 1);
+    }
+}
 
 
         function prevStep() {
@@ -1595,6 +1422,107 @@ function createSummary() {
     }
 
 }
+
+
+// PUBLIKASIKAN KEGIATAN TANPA RELOAD
+const eventForm = document.getElementById('eventForm');
+
+if (eventForm) {
+    eventForm.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const tombol = eventForm.querySelector('.btn-submit');
+        const teksAwal = tombol.textContent;
+
+        tombol.disabled = true;
+        tombol.textContent = 'Mempublikasikan...';
+
+        // Hapus notifikasi sebelumnya
+        document.querySelectorAll('.ajax-notice').forEach(el => el.remove());
+
+        try {
+            const response = await fetch(eventForm.action, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new FormData(eventForm)
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                if (response.status === 422 && data.errors) {
+                    const daftarError = Object.values(data.errors)
+                        .flat()
+                        .join('\n');
+
+                    const pesanError = document.createElement('div');
+                    pesanError.className = 'ajax-notice';
+                    pesanError.style.cssText =
+                        'background:#fff0f0;color:#c0392b;padding:15px;margin-bottom:20px;border-radius:12px;white-space:pre-line;';
+                    pesanError.textContent = daftarError;
+
+                    eventForm.prepend(pesanError);
+
+                    const fieldPertama = Object.keys(data.errors)[0];
+                    const inputPertama = eventForm.querySelector(
+                        `[name="${fieldPertama}"]`
+                    );
+
+                    const stepPertama = inputPertama?.closest('.step');
+
+                    if (stepPertama) {
+                        showStep(Number(stepPertama.dataset.step));
+                        inputPertama.focus();
+                    }
+
+                    throw new Error('Periksa kembali data kegiatanmu.');
+                }
+
+                throw new Error(data.message || 'Kegiatan gagal dipublikasikan.');
+            }
+
+            // Tampilkan notifikasi berhasil
+            const sukses = document.createElement('div');
+            sukses.className = 'ajax-notice';
+            sukses.style.cssText =
+                'background:#eaf9ef;color:#28764d;padding:18px;margin-bottom:20px;border-radius:12px;font-weight:600;';
+
+            sukses.textContent = '✓ ' + data.message;
+
+            eventForm.before(sukses);
+
+            // Reset formulir setelah berhasil
+            eventForm.reset();
+
+            showStep(1);
+
+            document.getElementById('fileName').textContent =
+                'Gunakan foto yang jelas dan sesuai dengan kegiatan.';
+
+            document.getElementById('fileName').style.color = '';
+            document.getElementById('fileName').style.fontWeight = '';
+
+            document.getElementById('summary').innerHTML = '';
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+        } catch (error) {
+            if (error.message !== 'Periksa kembali data kegiatanmu.') {
+                alert(error.message);
+            }
+        } finally {
+            tombol.disabled = false;
+            tombol.textContent = teksAwal;
+        }
+    });
+}
+
 
     </script>
 

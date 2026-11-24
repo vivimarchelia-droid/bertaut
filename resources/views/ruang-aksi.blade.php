@@ -535,35 +535,35 @@
 
 
 
-        .chat-layout {
-
-            display: grid;
-
-            grid-template-columns: 0.9fr 1.35fr;
-
-            gap: 18px;
-
-        }
+.chat-layout {
+    display: grid;
+    grid-template-columns: 0.9fr 1.35fr;
+    gap: 18px;
+    height: 650px;
+    max-height: 650px;
+    min-height: 650px;
+    align-items: stretch;
+}
 
 
 
         .room-panel,
+.chat-panel {
+    background: #ffffff;
+    border: 2px solid #d5eaff;
+    border-radius: 25px;
+    overflow: hidden;
+    min-width: 0;
+    height: 100%;
+    min-height: 0;
+    max-height: 100%;
+    box-sizing: border-box;
+}
 
-        .chat-panel {
-
-            background: #ffffff;
-
-            border: 2px solid #d5eaff;
-
-            border-radius: 25px;
-
-            overflow: hidden;
-
-            min-width: 0;
-
-        }
-
-
+.chat-panel {
+    display: flex;
+    flex-direction: column;
+}
 
         .panel-title {
 
@@ -582,10 +582,12 @@
 
 
         .room-list {
-
-            padding: 0 13px 15px;
-
-        }
+    padding: 0 13px 15px;
+    height: calc(100% - 75px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
 
 
 
@@ -887,17 +889,35 @@
 
 
 
-        .messages {
+.messages {
+    flex: 1;
+    min-height: 0;
+    box-sizing: border-box;
+    padding: 25px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #ffffff;
+}
 
-            height: 380px;
+.empty-chat {
+    width: 100%;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #7190bd;
+}
 
-            padding: 25px 20px;
+.empty-chat-icon {
+    font-size: 45px;
+    margin-bottom: 10px;
+}
 
-            overflow-y: auto;
-
-            background: #ffffff;
-
-        }
+.empty-chat p {
+    margin-top: 8px;
+}
 
 
 
@@ -1017,21 +1037,16 @@
 
 
 
-        .chat-input-area {
-
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-
-            padding: 15px;
-
-            background: #f0f8ff;
-
-            border-top: 2px solid #e0efff;
-
-        }
+       .chat-input-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #f0f8ff;
+    border-top: 2px solid #e0efff;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
 
 
 
@@ -1456,7 +1471,39 @@
         }
         .room-options-menu button:hover { background: #edf7ff; }
 
+        /* Scrollbar abu-abu muda */
+.room-list::-webkit-scrollbar,
+.messages::-webkit-scrollbar {
+    width: 7px;
+}
+
+.room-list::-webkit-scrollbar-track,
+.messages::-webkit-scrollbar-track {
+    background: #f1f6fc;
+    border-radius: 10px;
+}
+
+.room-list::-webkit-scrollbar-thumb,
+.messages::-webkit-scrollbar-thumb {
+    background: #dce3eb;
+    border-radius: 10px;
+}
+
+.room-list::-webkit-scrollbar-thumb:hover,
+.messages::-webkit-scrollbar-thumb:hover {
+    background: #cbd5e1;
+}
+
+/* Firefox */
+.room-list,
+.messages {
+    scrollbar-width: thin;
+    scrollbar-color: #dce3eb #f1f6fc;
+}
+
     </style>
+
+    <meta name="user-id" content="{{ auth()->id() }}">
 
 </head>
 
@@ -1591,12 +1638,9 @@
         <!-- JUDUL -->
 
         <div class="section-heading">
+    <h2>Room Chat Saya ✨</h2>
+</div>
 
-            <h2>Room Chat Saya ✨</h2>
-
-            <div class="room-count">💬 3 Room</div>
-
-        </div>
 
 
 
@@ -1631,14 +1675,13 @@
 
 
     <a
+    href="{{ route('ruang-aksi.detail', $item->id) }}"
+    data-room-url="{{ route('ruang-aksi.detail', $item->id) }}"
+    class="room-card {{ isset($kegiatan) && $kegiatan->id == $item->id ? 'active' : '' }}"
+    style="text-decoration:none; color:inherit;"
+>
 
-        href="{{ route('ruang-aksi.detail', $item->id) }}"
 
-        class="room-card {{ isset($kegiatan) && $kegiatan->id == $item->id ? 'active' : '' }}"
-
-        style="text-decoration:none; color:inherit;"
-
-    >
 
 
 
@@ -1647,14 +1690,10 @@
 
 
             <img
-
-                class="room-image"
-
-                src="{{ asset('storage/' . $item->foto) }}"
-
-                alt="{{ $item->judul }}"
-
-            >
+    class="room-image"
+    src="{{ str_starts_with($item->foto, 'images/') ? asset($item->foto) : asset('storage/' . $item->foto) }}"
+    alt="{{ $item->judul }}"
+>
 
 
 
@@ -1765,153 +1804,110 @@
 
 
 <!-- ROOM CHAT -->
-
 <div class="chat-panel">
-
-
 
     <div class="chat-header">
 
-
-
         <div class="chat-header-info">
 
-
-
             @if(isset($kegiatan) && $kegiatan->foto)
-
-
-
                 <img
-
                     id="chatImage"
-
                     class="chat-header-image"
-
-                    src="{{ asset('storage/' . $kegiatan->foto) }}"
-
+                    src="{{ str_starts_with($kegiatan->foto, 'images/') ? asset($kegiatan->foto) : asset('storage/' . $kegiatan->foto) }}"
                     alt="{{ $kegiatan->judul }}"
-
                 >
-
-
-
             @else
-
-
-
                 <div
-
                     id="chatImage"
-
                     class="chat-header-image"
-
                     style="display:flex;align-items:center;justify-content:center;background:#dceeff;font-size:30px;"
-
                 >
-
                     🌱
-
                 </div>
-
-
-
             @endif
 
-
-
-            <div>
-
-
+            <div class="chat-header-text">
 
                 <h3 id="chatTitle">
-
-
-
                     @if(isset($kegiatan))
-
                         {{ $kegiatan->judul }}
-
                     @else
-
                         Pilih Kegiatan
-
                     @endif
-
-
-
                 </h3>
 
-
-
                 <p id="chatDetails">
-
-
-
                     @if(isset($kegiatan))
-
-
-
                         📍 {{ $kegiatan->lokasi }}
-
                         &nbsp; | &nbsp;
-
                         📅 {{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('l, d F Y') }}
-
-
-
                     @else
-
-
-
                         Pilih kegiatan untuk membuka room chat.
-
-
-
                     @endif
-
-
-
                 </p>
 
-
-
             </div>
-
-
 
         </div>
 
-
-
         <div class="chat-actions" style="position:relative;">
-            <button class="chat-action" id="roomSearchToggle" type="button"
-                    aria-label="Cari kegiatan" aria-expanded="false" title="Cari kegiatan">⌕</button>
 
-            <button class="chat-action" id="roomMenuToggle" type="button"
-                    aria-label="Menu kegiatan" aria-expanded="false" title="Menu lainnya">⋮</button>
+            <button
+                class="chat-action"
+                id="roomSearchToggle"
+                type="button"
+                aria-label="Cari kegiatan"
+                aria-expanded="false"
+                title="Cari kegiatan"
+            >⌕</button>
+
+            <button
+                class="chat-action"
+                id="roomMenuToggle"
+                type="button"
+                aria-label="Menu kegiatan"
+                aria-expanded="false"
+                title="Menu lainnya"
+            >⋮</button>
 
             <div id="roomOptionsMenu" class="room-options-menu" hidden>
-                <button type="button" data-room-sort="az">Urutkan nama A–Z</button>
-                <button type="button" data-room-sort="za">Urutkan nama Z–A</button>
-                <button type="button" data-room-sort="default">Urutan semula</button>
+                <button type="button" data-room-sort="az">
+                    Urutkan nama A–Z
+                </button>
+
+                <button type="button" data-room-sort="za">
+                    Urutkan nama Z–A
+                </button>
+
+                <button type="button" data-room-sort="default">
+                    Urutan semula
+                </button>
             </div>
+
         </div>
 
         <div id="roomSearchArea" class="room-search-area" hidden>
-            <input id="roomSearchInput" type="search"
-                   placeholder="Cari nama kegiatan atau lokasi..."
-                   aria-label="Cari nama kegiatan atau lokasi">
-            <button type="button" id="roomSearchClear" aria-label="Hapus pencarian">×</button>
+
+            <input
+                id="roomSearchInput"
+                type="search"
+                placeholder="Cari nama kegiatan atau lokasi..."
+                aria-label="Cari nama kegiatan atau lokasi"
+            >
+
+            <button
+                type="button"
+                id="roomSearchClear"
+                aria-label="Hapus pencarian"
+            >×</button>
+
         </div>
 
     </div>
-
+    
 <!-- PESAN -->
-
 <div class="messages" id="messages">
-
-
 
     @if(isset($kegiatan))
 
@@ -1919,82 +1915,50 @@
 
             <div class="message-row {{ $pesan->user_id == auth()->id() ? 'right' : '' }}">
 
-
-
                 @if($pesan->user_id != auth()->id())
-
                     <div class="message-avatar">😊</div>
-
                 @endif
-
-
 
                 <div class="message-content">
-
                     <div class="message-name">
-
                         {{ $pesan->user->name }}
-
                     </div>
-
-
 
                     <div class="message-bubble">
-
                         {{ $pesan->pesan }}
-
                     </div>
-
-
 
                     <div class="message-time">
-
                         {{ $pesan->created_at->format('H:i') }}
-
                     </div>
-
                 </div>
 
-
-
                 @if($pesan->user_id == auth()->id())
-
                     <div class="message-avatar">😊</div>
-
                 @endif
-
-
 
             </div>
 
         @empty
 
-            <div style="text-align:center; color:#7190bd; padding:30px;">
-
-                <div style="font-size:50px;">💬</div>
-
+            <div class="empty-chat">
+                <div class="empty-chat-icon">💬</div>
                 <strong>Belum ada pesan.</strong>
-
                 <p>Yuk mulai berdiskusi dengan anggota kegiatan!</p>
-
             </div>
 
         @endforelse
 
     @else
 
-        <div style="text-align:center; color:#7190bd; padding:30px;">
-
-            Pilih kegiatan untuk mulai berdiskusi 💬
-
+        <div class="empty-chat">
+            <div class="empty-chat-icon">💬</div>
+            <strong>Pilih kegiatan untuk mulai berdiskusi.</strong>
         </div>
 
     @endif
 
-
-
 </div>
-
 
 
     <!-- INPUT CHAT -->
@@ -2141,434 +2105,656 @@
 
 
 <script>
-
+document.addEventListener('DOMContentLoaded', function () {
     const messages = document.getElementById('messages');
+    const chatTitle = document.getElementById('chatTitle');
+    const chatDetails = document.getElementById('chatDetails');
+    const chatImage = document.getElementById('chatImage');
+    const roomList = document.querySelector('.room-list');
+    const chatPanel = document.querySelector('.chat-panel');
 
-    const chatForm = document.getElementById('chatForm');
+    let currentRoomId = null;
 
-    const chatInput = document.getElementById('chatInput');
+    // Ambil ID room yang sedang dibuka dari URL
+    const match = window.location.pathname.match(/\/ruang-aksi\/(\d+)/);
 
-
-
-    if (messages) {
-
-        messages.scrollTop = messages.scrollHeight;
-
+    if (match) {
+        currentRoomId = match[1];
     }
 
-
-
-    if (chatForm) {
-
-        chatForm.addEventListener('submit', async function (event) {
-
-            event.preventDefault();
-
-
-
-            const pesan = chatInput.value.trim();
-
-
-
-            if (!pesan) return;
-
-
-
-            const tombolKirim = chatForm.querySelector('.send-button');
-
-            tombolKirim.disabled = true;
-
-
-
-            try {
-
-                const response = await fetch(chatForm.action, {
-
-                    method: 'POST',
-
-                    headers: {
-
-                        'X-CSRF-TOKEN': chatForm.querySelector('[name="_token"]').value,
-
-                        'Accept': 'application/json',
-
-                        'Content-Type': 'application/json'
-
-                    },
-
-                    body: JSON.stringify({ pesan: pesan })
-
-                });
-
-
-
-                const data = await response.json();
-
-
-
-                if (!response.ok) {
-
-                    throw new Error(data.message || 'Pesan gagal dikirim.');
-
-                }
-
-
-
-                const newMessage = document.createElement('div');
-
-                newMessage.className = 'message-row right';
-
-
-
-                const content = document.createElement('div');
-
-                content.className = 'message-content';
-
-
-
-                const name = document.createElement('div');
-
-                name.className = 'message-name';
-
-                name.textContent = 'Kamu';
-
-
-
-                const bubble = document.createElement('div');
-
-                bubble.className = 'message-bubble';
-
-                bubble.textContent = pesan;
-
-
-
-                const time = document.createElement('div');
-
-                time.className = 'message-time';
-
-                time.textContent = data.waktu;
-
-
-
-                const avatar = document.createElement('div');
-
-                avatar.className = 'message-avatar';
-
-                avatar.textContent = '😊';
-
-
-
-                content.append(name, bubble, time);
-
-                newMessage.append(content, avatar);
-
-                messages.appendChild(newMessage);
-
-
-
-                chatInput.value = '';
-
-                messages.scrollTop = messages.scrollHeight;
-
-
-
-            } catch (error) {
-
-                alert(error.message);
-
-            } finally {
-
-                tombolKirim.disabled = false;
-
-            }
-
-        });
-
+    function scrollChat() {
+        if (messages) {
+            messages.scrollTop = messages.scrollHeight;
+        }
     }
 
+    function tampilkanPesan(pesans) {
+        messages.innerHTML = '';
 
-    // Fitur tombol + untuk memilih foto atau dokumen.
-    (function () {
-        const form = document.getElementById('chatForm');
-        const toggle = document.getElementById('attachmentToggle');
-        const menu = document.getElementById('attachmentMenu');
-        const photoInput = document.getElementById('photoInput');
-        const documentInput = document.getElementById('documentInput');
-        if (!form || !toggle || !menu) return;
-
-        toggle.addEventListener('click', function (event) {
-            event.stopPropagation();
-            menu.hidden = !menu.hidden;
-            toggle.setAttribute('aria-expanded', String(!menu.hidden));
-        });
-
-        document.getElementById('choosePhoto')?.addEventListener('click', () => {
-            menu.hidden = true;
-            toggle.setAttribute('aria-expanded', 'false');
-            photoInput.click();
-        });
-        document.getElementById('chooseDocument')?.addEventListener('click', () => {
-            menu.hidden = true;
-            toggle.setAttribute('aria-expanded', 'false');
-            documentInput.click();
-        });
-
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.attachment-wrap')) {
-                menu.hidden = true;
-                toggle.setAttribute('aria-expanded', 'false');
-            }
-        });
-
-        async function uploadAttachment(input) {
-            const file = input.files?.[0];
-            if (!file) return;
-
-            const maxSize = 10 * 1024 * 1024;
-            if (file.size > maxSize) {
-                alert('Ukuran file maksimal 10 MB.');
-                input.value = '';
-                return;
-            }
-
-            const sendButton = form.querySelector('.send-button');
-            const formData = new FormData();
-            formData.append('lampiran', file);
-            sendButton.disabled = true;
-
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': form.querySelector('[name="_token"]').value,
-                        'Accept': 'application/json'
-                    },
-                    body: formData
-                });
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.message || 'Lampiran gagal dikirim.');
-
-                // Server perlu mengembalikan file_url dan file_name setelah menyimpan lampiran.
-                if (data.file_url) {
-                    const row = document.createElement('div');
-                    row.className = 'message-row right';
-                    const content = document.createElement('div');
-                    content.className = 'message-content';
-                    const name = document.createElement('div');
-                    name.className = 'message-name';
-                    name.textContent = 'Kamu';
-                    const bubble = document.createElement('div');
-                    bubble.className = 'message-bubble';
-                    if (file.type.startsWith('image/')) {
-                        const img = document.createElement('img');
-                        img.src = data.file_url;
-                        img.alt = data.file_name || file.name;
-                        img.style.cssText = 'display:block;max-width:220px;max-height:220px;border-radius:12px;';
-                        bubble.appendChild(img);
-                    } else {
-                        const link = document.createElement('a');
-                        link.href = data.file_url;
-                        link.target = '_blank';
-                        link.rel = 'noopener';
-                        link.textContent = '📎 ' + (data.file_name || file.name);
-                        link.style.color = '#08459d';
-                        bubble.appendChild(link);
-                    }
-                    const time = document.createElement('div');
-                    time.className = 'message-time';
-                    time.textContent = data.waktu || new Date().toLocaleTimeString('id-ID', {hour:'2-digit', minute:'2-digit'});
-                    const avatar = document.createElement('div');
-                    avatar.className = 'message-avatar';
-                    avatar.textContent = '😊';
-                    content.append(name, bubble, time);
-                    row.append(content, avatar);
-                    document.getElementById('messages')?.appendChild(row);
-                    messages.scrollTop = messages.scrollHeight;
-                } else {
-                    alert('Lampiran terkirim, tetapi server belum mengirim alamat file untuk ditampilkan.');
-                }
-            } catch (error) {
-                alert(error.message || 'Lampiran gagal dikirim.');
-            } finally {
-                sendButton.disabled = false;
-                input.value = '';
-            }
-        }
-
-        photoInput.addEventListener('change', () => uploadAttachment(photoInput));
-        documentInput.addEventListener('change', () => uploadAttachment(documentInput));
-    })();
-
-    // Background Ruang Aksi berganti otomatis tanpa tombol manual.
-    (function () {
-        const heroSlides = document.querySelectorAll('.hero-slides img');
-        if (heroSlides.length < 2) return;
-
-        let activeSlide = 0;
-        window.setInterval(function () {
-            heroSlides[activeSlide].classList.remove('is-active');
-            activeSlide = (activeSlide + 1) % heroSlides.length;
-            heroSlides[activeSlide].classList.add('is-active');
-        }, 5000);
-    })();
-
-
-    // Pencarian dan pengurutan daftar kegiatan Ruang Aksi.
-    (function () {
-        const searchToggle = document.getElementById('roomSearchToggle');
-        const searchArea = document.getElementById('roomSearchArea');
-        const searchInput = document.getElementById('roomSearchInput');
-        const searchClear = document.getElementById('roomSearchClear');
-        const menuToggle = document.getElementById('roomMenuToggle');
-        const optionsMenu = document.getElementById('roomOptionsMenu');
-        const roomList = document.querySelector('.room-list');
-
-        if (!roomList) return;
-
-        const getCards = () => Array.from(roomList.querySelectorAll('.room-card'));
-
-        function filterRooms() {
-            const keyword = (searchInput?.value || '').trim().toLocaleLowerCase('id');
-            getCards().forEach(card => {
-                card.style.display = card.innerText.toLocaleLowerCase('id').includes(keyword) ? '' : 'none';
-            });
-
-            const visible = getCards().some(card => card.style.display !== 'none');
-            let noResult = document.getElementById('roomSearchNoResult');
-
-            if (keyword && !visible) {
-                if (!noResult) {
-                    noResult = document.createElement('div');
-                    noResult.id = 'roomSearchNoResult';
-                    noResult.style.cssText = 'padding:22px;text-align:center;color:#7190bd;font-size:13px;';
-                    noResult.textContent = 'Kegiatan tidak ditemukan.';
-                    roomList.appendChild(noResult);
-                }
-            } else if (noResult) {
-                noResult.remove();
-            }
-        }
-
-        searchToggle?.addEventListener('click', function () {
-            const open = searchArea.hidden;
-            searchArea.hidden = !open;
-            this.setAttribute('aria-expanded', String(open));
-            optionsMenu.hidden = true;
-            menuToggle?.setAttribute('aria-expanded', 'false');
-
-            if (open) searchInput?.focus();
-            else {
-                if (searchInput) searchInput.value = '';
-                filterRooms();
-            }
-        });
-
-        searchInput?.addEventListener('input', filterRooms);
-
-        searchClear?.addEventListener('click', function () {
-            if (searchInput) {
-                searchInput.value = '';
-                searchInput.focus();
-            }
-            filterRooms();
-        });
-
-        getCards().forEach((card, index) => card.dataset.originalOrder = index);
-
-        menuToggle?.addEventListener('click', function (event) {
-            event.stopPropagation();
-            optionsMenu.hidden = !optionsMenu.hidden;
-            this.setAttribute('aria-expanded', String(!optionsMenu.hidden));
-            searchArea.hidden = true;
-            searchToggle?.setAttribute('aria-expanded', 'false');
-        });
-
-        optionsMenu?.addEventListener('click', function (event) {
-            const button = event.target.closest('[data-room-sort]');
-            if (!button) return;
-
-            const cards = getCards();
-            const mode = button.dataset.roomSort;
-
-            if (mode === 'az' || mode === 'za') {
-                cards.sort((a, b) => {
-                    const aName = a.querySelector('.room-info h3')?.textContent.trim() || '';
-                    const bName = b.querySelector('.room-info h3')?.textContent.trim() || '';
-                    return mode === 'az'
-                        ? aName.localeCompare(bName, 'id')
-                        : bName.localeCompare(aName, 'id');
-                });
-            } else {
-                cards.sort((a, b) => Number(a.dataset.originalOrder) - Number(b.dataset.originalOrder));
-            }
-
-            cards.forEach(card => roomList.appendChild(card));
-            optionsMenu.hidden = true;
-            menuToggle?.setAttribute('aria-expanded', 'false');
-            filterRooms();
-        });
-
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('.chat-actions')) {
-                optionsMenu.hidden = true;
-                menuToggle?.setAttribute('aria-expanded', 'false');
-            }
-        });
-    })();
-
-    // REALTIME CHAT RUANG AKSI MENGGUNAKAN LARAVEL ECHO
-    @if(isset($kegiatan))
-    (function () {
-        const kegiatanId = @json($kegiatan->id);
-        const currentUserId = @json(auth()->id());
-        const messageContainer = document.getElementById('messages');
-
-        if (!window.Echo || !messageContainer) {
-            console.error('Laravel Echo atau area pesan belum tersedia.');
+        if (!pesans.length) {
+            messages.innerHTML = `
+                <div style="text-align:center;color:#7190bd;padding:30px;">
+                    <div style="font-size:50px;">💬</div>
+                    <strong>Belum ada pesan.</strong>
+                    <p>Yuk mulai berdiskusi dengan anggota kegiatan!</p>
+                </div>
+            `;
             return;
         }
 
-        window.Echo.private('kegiatan.' + kegiatanId)
-            .listen('.pesan.baru', function (data) {
-                // Pesan sendiri sudah ditampilkan oleh handler pengiriman.
-                if (Number(data.user_id) === Number(currentUserId)) {
-                    return;
-                }
+        pesans.forEach(function (pesan) {
+            const milikSaya = Number(pesan.user_id) === Number(
+                document.querySelector('meta[name="user-id"]')?.content
+            );
 
+            const row = document.createElement('div');
+            row.className = 'message-row' + (milikSaya ? ' right' : '');
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = '😊';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+
+            const name = document.createElement('div');
+            name.className = 'message-name';
+            name.textContent = pesan.nama;
+
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = pesan.pesan;
+
+            const time = document.createElement('div');
+            time.className = 'message-time';
+            time.textContent = pesan.waktu;
+
+            content.append(name, bubble, time);
+
+            if (!milikSaya) {
+                row.appendChild(avatar);
+            }
+
+            row.appendChild(content);
+
+            if (milikSaya) {
+                row.appendChild(avatar);
+            }
+
+            messages.appendChild(row);
+        });
+
+        scrollChat();
+    }
+
+
+function buatFormChat(id) {
+    const formLama = document.getElementById('chatForm');
+
+    // Ambil token CSRF dari form lama sebelum dihapus
+    const csrfToken =
+        formLama?.querySelector('input[name="_token"]')?.value ||
+        document.querySelector('meta[name="csrf-token"]')?.content ||
+        '';
+
+    if (formLama) {
+        formLama.remove();
+    }
+
+    if (!csrfToken) {
+        alert('Token keamanan tidak ditemukan. Silakan refresh halaman.');
+        return;
+    }
+
+    const form = document.createElement('form');
+    form.className = 'chat-input-area';
+    form.id = 'chatForm';
+    form.action = `/ruang-aksi/${id}/pesan`;
+    form.method = 'POST';
+
+    form.innerHTML = `
+        <input type="hidden" name="_token" value="${csrfToken}">
+
+        <div class="attachment-wrap">
+            <button class="plus-button" type="button">+</button>
+        </div>
+
+        <input
+            class="chat-input"
+            id="chatInput"
+            name="pesan"
+            type="text"
+            placeholder="Ketik pesan..."
+            autocomplete="off"
+            required
+        >
+
+        <button class="send-button" type="submit">➤</button>
+    `;
+
+    chatPanel.appendChild(form);
+    pasangFormChat(form);
+}
+
+
+    async function bukaRoom(url, kartu) {
+    try {
+        const response = await fetch(url, {
+            headers: {
+                'Accept': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            throw new Error('Room gagal dibuka.');
+        }
+
+        currentRoomId = String(data.kegiatan.id);
+
+        chatTitle.textContent = data.kegiatan.judul;
+
+        chatDetails.textContent =
+            '📍 ' + data.kegiatan.lokasi +
+            ' | 📅 ' + data.kegiatan.tanggal;
+
+        if (data.kegiatan.foto) {
+            if (chatImage.tagName.toLowerCase() === 'img') {
+                chatImage.src = data.kegiatan.foto;
+            } else {
+                const img = document.createElement('img');
+                img.id = 'chatImage';
+                img.className = 'chat-header-image';
+                img.src = data.kegiatan.foto;
+                img.alt = data.kegiatan.judul;
+                chatImage.replaceWith(img);
+            }
+        } else if (chatImage.tagName.toLowerCase() === 'img') {
+            const placeholder = document.createElement('div');
+            placeholder.id = 'chatImage';
+            placeholder.className = 'chat-header-image';
+            placeholder.style.cssText =
+                'display:flex;align-items:center;justify-content:center;background:#dceeff;font-size:30px;';
+            placeholder.textContent = '🌱';
+            chatImage.replaceWith(placeholder);
+        }
+
+        tampilkanPesan(data.pesans);
+        buatFormChat(data.kegiatan.id);
+
+        document.querySelectorAll('.room-card').forEach(function (item) {
+            item.classList.remove('active');
+        });
+
+        kartu.classList.add('active');
+
+        window.history.pushState({}, '', url);
+
+    } catch (error) {
+        alert(error.message);
+    }
+}
+
+// Klik daftar kegiatan tanpa reload
+if (roomList) {
+    roomList.addEventListener('click', function (event) {
+        const kartu = event.target.closest('.room-card');
+
+        if (!kartu) return;
+
+        event.preventDefault();
+
+        if (kartu.classList.contains('active')) return;
+
+        bukaRoom(kartu.dataset.roomUrl, kartu);
+    });
+}
+
+function pasangFormChat(form) {
+    form.addEventListener('submit', async function (event) {
+        event.preventDefault();
+
+        const input = form.querySelector('#chatInput');
+        const tombol = form.querySelector('.send-button');
+        const pesan = input.value.trim();
+
+        if (!pesan || !currentRoomId) return;
+
+        tombol.disabled = true;
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('[name="_token"]').value,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ pesan: pesan })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Pesan gagal dikirim.');
+            }
+
+            const row = document.createElement('div');
+            row.className = 'message-row right';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+
+            const name = document.createElement('div');
+            name.className = 'message-name';
+            name.textContent = 'Kamu';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = pesan;
+
+            const time = document.createElement('div');
+            time.className = 'message-time';
+            time.textContent = data.waktu;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = '😊';
+
+            content.append(name, bubble, time);
+            row.append(content, avatar);
+            messages.appendChild(row);
+
+            input.value = '';
+            scrollChat();
+
+        } catch (error) {
+            alert(error.message);
+        } finally {
+            tombol.disabled = false;
+            input.focus();
+        }
+    });
+}
+
+    // Form awal jika room sudah terbuka
+const formAwal = document.getElementById('chatForm');
+
+if (formAwal) {
+    pasangFormChat(formAwal);
+}
+
+scrollChat();
+
+// Tombol kembali/maju browser
+window.addEventListener('popstate', function () {
+    const match = window.location.pathname.match(/\/ruang-aksi\/(\d+)/);
+
+    if (!match) {
+        window.location.reload();
+        return;
+    }
+
+    const id = match[1];
+
+    const kartu = document.querySelector(
+        `.room-card[href$="/${id}"]`
+    );
+
+    if (kartu) {
+        bukaRoom(kartu.dataset.roomUrl, kartu);
+    }
+});
+
+// Fitur tombol + untuk memilih foto atau dokumen
+(function () {
+    const form = document.getElementById('chatForm');
+    const toggle = document.getElementById('attachmentToggle');
+    const menu = document.getElementById('attachmentMenu');
+    const photoInput = document.getElementById('photoInput');
+    const documentInput = document.getElementById('documentInput');
+
+    if (!form || !toggle || !menu || !photoInput || !documentInput) return;
+
+    toggle.addEventListener('click', function (event) {
+        event.stopPropagation();
+        menu.hidden = !menu.hidden;
+        toggle.setAttribute('aria-expanded', String(!menu.hidden));
+    });
+
+    document.getElementById('choosePhoto')?.addEventListener('click', function () {
+        menu.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        photoInput.click();
+    });
+
+    document.getElementById('chooseDocument')?.addEventListener('click', function () {
+        menu.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        documentInput.click();
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.attachment-wrap')) {
+            menu.hidden = true;
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+
+    async function uploadAttachment(input) {
+        const file = input.files?.[0];
+
+        if (!file) return;
+
+        const maxSize = 10 * 1024 * 1024;
+
+        if (file.size > maxSize) {
+            alert('Ukuran file maksimal 10 MB.');
+            input.value = '';
+            return;
+        }
+
+        const sendButton = form.querySelector('.send-button');
+        const formData = new FormData();
+
+        formData.append('lampiran', file);
+        sendButton.disabled = true;
+
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': form.querySelector('[name="_token"]').value,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Lampiran gagal dikirim.');
+            }
+
+            if (data.file_url) {
                 const row = document.createElement('div');
-                row.className = 'message-row';
-
-                const avatar = document.createElement('div');
-                avatar.className = 'message-avatar';
-                avatar.textContent = '😊';
+                row.className = 'message-row right';
 
                 const content = document.createElement('div');
                 content.className = 'message-content';
 
                 const name = document.createElement('div');
                 name.className = 'message-name';
-                name.textContent = data.nama || 'Anggota';
+                name.textContent = 'Kamu';
 
                 const bubble = document.createElement('div');
                 bubble.className = 'message-bubble';
-                bubble.textContent = data.pesan;
+
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.src = data.file_url;
+                    img.alt = data.file_name || file.name;
+                    img.style.cssText = 'display:block;max-width:220px;max-height:220px;border-radius:12px;';
+                    bubble.appendChild(img);
+                } else {
+                    const link = document.createElement('a');
+                    link.href = data.file_url;
+                    link.target = '_blank';
+                    link.rel = 'noopener';
+                    link.textContent = '📎 ' + (data.file_name || file.name);
+                    link.style.color = '#08459d';
+                    bubble.appendChild(link);
+                }
 
                 const time = document.createElement('div');
                 time.className = 'message-time';
-                time.textContent = data.waktu || '';
+                time.textContent = data.waktu || new Date().toLocaleTimeString('id-ID', {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                const avatar = document.createElement('div');
+                avatar.className = 'message-avatar';
+                avatar.textContent = '😊';
 
                 content.append(name, bubble, time);
-                row.append(avatar, content);
-                messageContainer.appendChild(row);
-                messageContainer.scrollTop = messageContainer.scrollHeight;
+                row.append(content, avatar);
+
+                messages.appendChild(row);
+                messages.scrollTop = messages.scrollHeight;
+
+            } else {
+                alert('Lampiran terkirim, tetapi server belum mengirim alamat file untuk ditampilkan.');
+            }
+
+        } catch (error) {
+            alert(error.message || 'Lampiran gagal dikirim.');
+        } finally {
+            sendButton.disabled = false;
+            input.value = '';
+        }
+    }
+
+    photoInput.addEventListener('change', function () {
+        uploadAttachment(photoInput);
+    });
+
+    documentInput.addEventListener('change', function () {
+        uploadAttachment(documentInput);
+    });
+
+})(); 
+
+    // Background Ruang Aksi berganti otomatis tanpa tombol manual.
+(function () {
+    const heroSlides = document.querySelectorAll('.hero-slides img');
+
+    if (heroSlides.length < 2) return;
+
+    let activeSlide = 0;
+
+    window.setInterval(function () {
+        heroSlides[activeSlide].classList.remove('is-active');
+        activeSlide = (activeSlide + 1) % heroSlides.length;
+        heroSlides[activeSlide].classList.add('is-active');
+    }, 5000);
+})();
+
+
+// Pencarian dan pengurutan daftar kegiatan Ruang Aksi.
+(function () {
+    const searchToggle = document.getElementById('roomSearchToggle');
+    const searchArea = document.getElementById('roomSearchArea');
+    const searchInput = document.getElementById('roomSearchInput');
+    const searchClear = document.getElementById('roomSearchClear');
+    const menuToggle = document.getElementById('roomMenuToggle');
+    const optionsMenu = document.getElementById('roomOptionsMenu');
+    const roomList = document.querySelector('.room-list');
+
+    if (!roomList) return;
+
+    const getCards = () => Array.from(roomList.querySelectorAll('.room-card'));
+
+    function filterRooms() {
+        const keyword = (searchInput?.value || '').trim().toLocaleLowerCase('id');
+
+        getCards().forEach(card => {
+            card.style.display = card.innerText.toLocaleLowerCase('id').includes(keyword) ? '' : 'none';
+        });
+
+        const visible = getCards().some(card => card.style.display !== 'none');
+        let noResult = document.getElementById('roomSearchNoResult');
+
+        if (keyword && !visible) {
+            if (!noResult) {
+                noResult = document.createElement('div');
+                noResult.id = 'roomSearchNoResult';
+                noResult.style.cssText = 'padding:22px;text-align:center;color:#7190bd;font-size:13px;';
+                noResult.textContent = 'Kegiatan tidak ditemukan.';
+                roomList.appendChild(noResult);
+            }
+        } else if (noResult) {
+            noResult.remove();
+        }
+    }
+
+    searchToggle?.addEventListener('click', function () {
+        const open = searchArea.hidden;
+
+        searchArea.hidden = !open;
+        this.setAttribute('aria-expanded', String(open));
+
+        optionsMenu.hidden = true;
+        menuToggle?.setAttribute('aria-expanded', 'false');
+
+        if (open) {
+            searchInput?.focus();
+        } else {
+            if (searchInput) searchInput.value = '';
+            filterRooms();
+        }
+    });
+
+    searchInput?.addEventListener('input', filterRooms);
+
+    searchClear?.addEventListener('click', function () {
+        if (searchInput) {
+            searchInput.value = '';
+            searchInput.focus();
+        }
+
+        filterRooms();
+    });
+
+    getCards().forEach((card, index) => {
+        card.dataset.originalOrder = index;
+    });
+
+    menuToggle?.addEventListener('click', function (event) {
+        event.stopPropagation();
+
+        optionsMenu.hidden = !optionsMenu.hidden;
+        this.setAttribute('aria-expanded', String(!optionsMenu.hidden));
+
+        searchArea.hidden = true;
+        searchToggle?.setAttribute('aria-expanded', 'false');
+    });
+
+    optionsMenu?.addEventListener('click', function (event) {
+        const button = event.target.closest('[data-room-sort]');
+
+        if (!button) return;
+
+        const cards = getCards();
+        const mode = button.dataset.roomSort;
+
+        if (mode === 'az' || mode === 'za') {
+            cards.sort((a, b) => {
+                const aName = a.querySelector('.room-info h3')?.textContent.trim() || '';
+                const bName = b.querySelector('.room-info h3')?.textContent.trim() || '';
+
+                return mode === 'az'
+                    ? aName.localeCompare(bName, 'id')
+                    : bName.localeCompare(aName, 'id');
             });
-    })();
-    @endif
+        } else {
+            cards.sort((a, b) => {
+                return Number(a.dataset.originalOrder) - Number(b.dataset.originalOrder);
+            });
+        }
 
+        cards.forEach(card => roomList.appendChild(card));
+
+        optionsMenu.hidden = true;
+        menuToggle?.setAttribute('aria-expanded', 'false');
+
+        filterRooms();
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!event.target.closest('.chat-actions')) {
+            optionsMenu.hidden = true;
+            menuToggle?.setAttribute('aria-expanded', 'false');
+        }
+    });
+})();
+
+
+// REALTIME CHAT RUANG AKSI MENGGUNAKAN LARAVEL ECHO
+@if(isset($kegiatan))
+(function () {
+    const kegiatanId = @json($kegiatan->id);
+    const currentUserId = @json(auth()->id());
+    const messageContainer = document.getElementById('messages');
+
+    if (!window.Echo || !messageContainer) {
+        console.error('Laravel Echo atau area pesan belum tersedia.');
+        return;
+    }
+
+    window.Echo.private('kegiatan.' + kegiatanId)
+        .listen('.pesan.baru', function (data) {
+
+            // Pesan sendiri sudah ditampilkan oleh handler pengiriman.
+            if (Number(data.user_id) === Number(currentUserId)) {
+                return;
+            }
+
+            const row = document.createElement('div');
+            row.className = 'message-row';
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = '😊';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+
+            const name = document.createElement('div');
+            name.className = 'message-name';
+            name.textContent = data.nama || 'Anggota';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble';
+            bubble.textContent = data.pesan;
+
+            const time = document.createElement('div');
+            time.className = 'message-time';
+            time.textContent = data.waktu || '';
+
+            content.append(name, bubble, time);
+            row.append(avatar, content);
+
+            messageContainer.appendChild(row);
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        });
+})();
+@endif
+
+
+// Tombol kembali/maju browser
+window.addEventListener('popstate', function () {
+    const match = window.location.pathname.match(/\/ruang-aksi\/(\d+)/);
+
+    if (!match) {
+        window.location.reload();
+        return;
+    }
+
+    const id = match[1];
+
+    const kartu = document.querySelector(
+        `.room-card[href$="/${id}"]`
+    );
+
+    if (kartu) {
+        bukaRoom(kartu.dataset.roomUrl, kartu);
+    }
+});
+
+});
 </script>
-
-
-
 </body>
-
 </html>

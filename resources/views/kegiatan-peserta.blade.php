@@ -263,6 +263,57 @@
                 margin-left: 62px;
             }
         }
+        .notification {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 16px 20px;
+    border-radius: 15px;
+    margin: 20px 0;
+    box-shadow: 0 5px 15px rgba(0,0,0,.05);
+    animation: notificationIn .3s ease;
+}
+
+.notification-error {
+    background: #fff0d0;
+    color: #a36b00;
+    border: 1px solid #ffdf91;
+}
+
+.notification-success {
+    background: #d9f8e9;
+    color: #008866;
+    border: 1px solid #a8ebcc;
+}
+
+.notification strong {
+    font-size: 14px;
+}
+
+.notification p {
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.notification button {
+    margin-left: auto;
+    border: none;
+    background: transparent;
+    font-size: 23px;
+    cursor: pointer;
+    color: inherit;
+}
+
+@keyframes notificationIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
     </style>
 </head>
 
@@ -297,11 +348,29 @@
 
         <section class="content-panel">
 
-            @if (session('success'))
-                <div class="success-message">
-                    {{ session('success') }}
-                </div>
-            @endif
+    {{-- NOTIFIKASI ERROR --}}
+    @if (session('error'))
+        <div class="notification notification-error">
+            <span>⚠️</span>
+            <div>
+                <strong>Belum Bisa Diverifikasi</strong>
+                <p>{{ session('error') }}</p>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()">×</button>
+        </div>
+    @endif
+
+    {{-- NOTIFIKASI BERHASIL --}}
+    @if (session('success'))
+        <div class="notification notification-success">
+            <span>✓</span>
+            <div>
+                <strong>Berhasil!</strong>
+                <p>{{ session('success') }}</p>
+            </div>
+            <button type="button" onclick="this.parentElement.remove()">×</button>
+        </div>
+    @endif
 
             <div class="panel-heading">
                 <h2>Peserta Kegiatan</h2>
@@ -332,21 +401,21 @@
                                     {{ $peserta->user->email ?? '-' }}
                                 </div>
 
-                                @if ($peserta->status === 'selesai')
-                                    <span class="participant-status status-completed">
-                                        ✓ Sudah Diverifikasi
-                                    </span>
-                                @else
-                                    <span class="participant-status status-registered">
-                                        Menunggu Verifikasi
-                                    </span>
-                                @endif
+                               @if ($peserta->status_kehadiran === 'hadir')
+    <span class="participant-status status-completed">
+        ✓ Sudah Diverifikasi
+    </span>
+@else
+    <span class="participant-status status-registered">
+        Menunggu Verifikasi
+    </span>
+@endif
 
                             </div>
 
                         </div>
 
-                        @if ($peserta->status !== 'selesai')
+                        @if ($peserta->status_kehadiran !== 'hadir')
 
                             <form
                                 action="{{ route('kegiatan.verifikasi-peserta', [

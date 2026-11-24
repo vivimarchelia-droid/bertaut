@@ -13,21 +13,21 @@ class DashboardController extends Controller
         $userId = auth()->id();
 
         // Mengambil kegiatan yang dibuat dan yang diikuti pengguna
-$kegiatanSaya = Kegiatan::whereDate('tanggal', '>=', now()->toDateString())
-    ->where(function ($query) use ($userId) {
-        $query->where('user_id', $userId)
-            ->orWhereHas('peserta', function ($q) use ($userId) {
-                $q->where('user_id', $userId);
-            });
-    })
-    ->latest()
-    ->get();
+        $kegiatanSaya = Kegiatan::whereDate('tanggal', '>=', now()->toDateString())
+            ->where(function ($query) use ($userId) {
+                $query->where('user_id', $userId)
+                    ->orWhereHas('peserta', function ($q) use ($userId) {
+                        $q->where('user_id', $userId);
+                    });
+            })
+            ->latest()
+            ->get();
 
-        // Mengambil semua kegiatan yang tersedia
+        // Mengambil kegiatan yang tersedia
         $query = Kegiatan::withCount('peserta')
-    ->with('user')
-    ->whereDate('tanggal', '>=', now()->toDateString())
-    ->latest();
+            ->with('user')
+            ->whereDate('tanggal', '>=', now()->toDateString())
+            ->latest();
 
         // Pencarian berdasarkan judul, kategori, dan lokasi
         if ($request->filled('cari')) {
@@ -45,7 +45,8 @@ $kegiatanSaya = Kegiatan::whereDate('tanggal', '>=', now()->toDateString())
             $query->where('kategori', $request->kategori);
         }
 
-        $kegiatans = $query->take(6)->get();
+        // Dashboard hanya menampilkan maksimal 3 kegiatan
+        $kegiatans = $query->take(3)->get();
 
         return view('dashboard', compact(
             'kegiatanSaya',

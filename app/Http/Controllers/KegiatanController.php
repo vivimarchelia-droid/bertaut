@@ -8,61 +8,86 @@ use App\Models\Sertifikat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 
 class KegiatanController extends Controller
 {
-    // MEMBUAT KEGIATAN
-    public function store(Request $request)
-    {
-        $request->validate([
-            'judul' => 'required',
-            'kategori' => 'required',
-            'deskripsi' => 'required',
-            'tujuan' => 'required',
-            'manfaat' => 'required',
-            'tanggal' => 'required|date',
-            'waktu' => 'required',
-            'lokasi' => 'required',
-            'jumlah_relawan' => 'required|integer',
-            'batas_pendaftaran' => 'required|date',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+ // MEMBUAT KEGIATAN
+public function store(Request $request)
+{
+    $validated = $request->validate([
+        'judul' => 'required|string|max:255',
+        'kategori' => 'required|string',
+        'deskripsi' => 'required|string',
+        'tujuan' => 'required|string',
+        'manfaat' => 'required|string',
+        'persyaratan' => 'nullable|string',
+        'perlengkapan' => 'nullable|string',
+        'tanggal' => 'required|date',
+        'waktu' => 'required',
+        'lokasi' => 'required|string',
+        'maps' => 'required|url',
+        'jumlah_relawan' => 'required|integer|min:1',
+        'batas_pendaftaran' => 'required|date',
+        'foto' => 'required|image|mimes:jpg,jpeg,png|max:5120',
+    ], [
+        'maps.required' => 'Link Google Maps wajib diisi.',
+        'maps.url' => 'Link Google Maps harus berupa URL yang valid.',
+        'foto.required' => 'Foto kegiatan wajib diunggah.',
+        'foto.image' => 'File yang diunggah harus berupa gambar.',
+        'foto.mimes' => 'Format foto harus JPG, JPEG, atau PNG.',
+        'foto.max' => 'Ukuran foto maksimal 5 MB.',
+    ]);
+
+    $foto = null;
+
+    if ($request->hasFile('foto')) {
+        $namaFoto = time() . '_' . uniqid() . '.' .
+            $request->file('foto')->getClientOriginalExtension();
+
+        $request->file('foto')->move(
+            public_path('images/kegiatan'),
+            $namaFoto
+        );
+
+        $foto = 'images/kegiatan/' . $namaFoto;
+    }
+
+    $kegiatan = Kegiatan::create([
+        'user_id' => auth()->id(),
+        'judul' => $validated['judul'],
+        'kategori' => $validated['kategori'],
+        'deskripsi' => $validated['deskripsi'],
+        'tujuan' => $validated['tujuan'],
+        'manfaat' => $validated['manfaat'],
+        'persyaratan' => $validated['persyaratan'] ?? null,
+        'perlengkapan' => $validated['perlengkapan'] ?? null,
+        'tanggal' => $validated['tanggal'],
+        'waktu' => $validated['waktu'],
+        'lokasi' => $validated['lokasi'],
+        'maps' => $validated['maps'] ?? null,
+        'jumlah_relawan' => $validated['jumlah_relawan'],
+        'batas_pendaftaran' => $validated['batas_pendaftaran'],
+        'foto' => $foto,
+    ]);
+
+    // Respons khusus untuk pengiriman AJAX
+    if ($request->expectsJson()) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Kegiatan berhasil dipublikasikan!',
+            'redirect' => route('kegiatan'),
+            'kegiatan_id' => $kegiatan->id,
         ]);
+    }
 
-       $foto = null;
-
-if ($request->hasFile('foto')) {
-    $namaFoto = time() . '_' . uniqid() . '.' . $request->file('foto')->getClientOriginalExtension();
-
-    $request->file('foto')->move(
-        public_path('images/kegiatan'),
-        $namaFoto
-    );
-
-    $foto = 'images/kegiatan/' . $namaFoto;
+    // Tetap mendukung pengiriman formulir biasa
+    return redirect()
+        ->route('kegiatan')
+        ->with('success', 'Kegiatan berhasil dipublikasikan!');
 }
 
-        Kegiatan::create([
-            'user_id' => auth()->id(),
-            'judul' => $request->judul,
-            'kategori' => $request->kategori,
-            'deskripsi' => $request->deskripsi,
-            'tujuan' => $request->tujuan,
-            'manfaat' => $request->manfaat,
-            'persyaratan' => $request->persyaratan,
-            'perlengkapan' => $request->perlengkapan,
-            'tanggal' => $request->tanggal,
-            'waktu' => $request->waktu,
-            'lokasi' => $request->lokasi,
-            'maps' => $request->maps,
-            'jumlah_relawan' => $request->jumlah_relawan,
-            'batas_pendaftaran' => $request->batas_pendaftaran,
-            'foto' => $foto,
-        ]);
-
-        return redirect()
-            ->route('kegiatan')
-            ->with('success', 'Kegiatan berhasil dipublikasikan!');
-    }
 
     // MENAMPILKAN DETAIL KEGIATAN
     public function show($id)
@@ -141,50 +166,58 @@ if ($request->hasFile('foto')) {
         return view('pendaftaran-berhasil', compact('kegiatan'));
     }
 
-    // VERIFIKASI PESERTA DAN TERBITKAN SERTIFIKAT
-    public function verifikasiPeserta($kegiatanId, $pesertaId)
-    {
-        $kegiatan = Kegiatan::findOrFail($kegiatanId);
 
-        abort_unless($kegiatan->user_id == auth()->id(), 403);
+// VERIFIKASI PESERTA DAN TERBITKAN SERTIFIKAT
+public function verifikasiPeserta($kegiatanId, $pesertaId)
+{
+    $kegiatan = Kegiatan::findOrFail($kegiatanId);
 
-        abort_if(
-            Carbon::parse($kegiatan->tanggal)->isFuture(),
-            403,
+    // Hanya penyelenggara yang boleh memverifikasi
+    abort_unless($kegiatan->user_id == auth()->id(), 403);
+
+    // Verifikasi hanya bisa dilakukan setelah tanggal kegiatan
+    if (Carbon::parse($kegiatan->tanggal)->isFuture()) {
+        return back()->with(
+            'error',
             'Peserta hanya bisa diverifikasi setelah tanggal kegiatan selesai.'
         );
+    }
 
-        $peserta = PesertaKegiatan::where('id', $pesertaId)
-            ->where('kegiatan_id', $kegiatanId)
-            ->firstOrFail();
+    $peserta = PesertaKegiatan::where('id', $pesertaId)
+        ->where('kegiatan_id', $kegiatanId)
+        ->firstOrFail();
 
-        if ($peserta->status === 'selesai') {
-            return back()->with(
-                'success',
-                'Peserta ini sudah diverifikasi.'
-            );
-        }
-
-        $peserta->update([
-            'status' => 'selesai',
-        ]);
-
-        Sertifikat::firstOrCreate(
-            [
-                'user_id' => $peserta->user_id,
-                'kegiatan_id' => $kegiatan->id,
-            ],
-            [
-                'nomor_sertifikat' => 'BRT-' . strtoupper(Str::random(10)),
-                'tanggal_terbit' => now(),
-            ]
-        );
-
+    // Cek apakah peserta sudah dinyatakan hadir
+    if ($peserta->status_kehadiran === 'hadir') {
         return back()->with(
             'success',
-            'Peserta berhasil diverifikasi dan sertifikat berhasil diterbitkan!'
+            'Peserta ini sudah diverifikasi.'
         );
     }
+
+    // Tandai peserta sebagai hadir
+    $peserta->update([
+        'status_kehadiran' => 'hadir',
+    ]);
+
+    // Terbitkan sertifikat
+    Sertifikat::firstOrCreate(
+        [
+            'user_id' => $peserta->user_id,
+            'kegiatan_id' => $kegiatan->id,
+        ],
+        [
+            'nomor_sertifikat' => 'BRT-' . strtoupper(Str::random(10)),
+            'tanggal_terbit' => now(),
+        ]
+    );
+
+    return back()->with(
+        'success',
+        'Peserta berhasil diverifikasi dan sertifikat berhasil diterbitkan!'
+    );
+}
+
 
     // MENAMPILKAN DAFTAR PESERTA UNTUK EO
     public function daftarPeserta($id)
@@ -197,4 +230,123 @@ if ($request->hasFile('foto')) {
 
         return view('kegiatan-peserta', compact('kegiatan'));
     }
+
+// MENAMPILKAN FORM EDIT KEGIATAN
+public function edit($id)
+{
+    $kegiatan = Kegiatan::findOrFail($id);
+
+    // Hanya penyelenggara yang boleh mengedit
+    abort_unless($kegiatan->user_id == auth()->id(), 403);
+
+    return view('edit-kegiatan', compact('kegiatan'));
+}
+
+
+// MENYIMPAN PERUBAHAN KEGIATAN
+public function update(Request $request, $id)
+{
+    $kegiatan = Kegiatan::findOrFail($id);
+
+    // Pastikan hanya pemilik kegiatan yang bisa mengubah
+    abort_unless($kegiatan->user_id == auth()->id(), 403);
+
+    $validated = $request->validate([
+        'judul' => 'required|string|max:255',
+        'kategori' => 'required|string',
+        'deskripsi' => 'required|string',
+        'tujuan' => 'required|string',
+        'manfaat' => 'required|string',
+        'persyaratan' => 'nullable|string',
+        'perlengkapan' => 'nullable|string',
+        'tanggal' => 'required|date',
+        'waktu' => 'required',
+        'lokasi' => 'required|string',
+        'maps' => 'nullable|url',
+        'jumlah_relawan' => 'required|integer|min:1',
+        'batas_pendaftaran' => 'required|date',
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+    ]);
+
+    $fotoLama = $kegiatan->foto;
+
+    // Jika penyelenggara mengunggah foto baru
+    if ($request->hasFile('foto')) {
+        $namaFoto = time() . '_' . uniqid() . '.' .
+            $request->file('foto')->getClientOriginalExtension();
+
+        $request->file('foto')->move(
+            public_path('images/kegiatan'),
+            $namaFoto
+        );
+
+        $validated['foto'] = 'images/kegiatan/' . $namaFoto;
+    }
+
+    $kegiatan->update($validated);
+
+    // Hapus foto lama setelah foto baru berhasil disimpan
+    if (
+        $request->hasFile('foto') &&
+        $fotoLama &&
+        str_starts_with($fotoLama, 'images/kegiatan/')
+    ) {
+        $pathFotoLama = public_path($fotoLama);
+
+        if (File::exists($pathFotoLama)) {
+            File::delete($pathFotoLama);
+        }
+    }
+
+    return redirect()
+        ->route('kegiatan-saya')
+        ->with('success', 'Kegiatan berhasil diperbarui!');
+}
+
+
+// MENGHAPUS KEGIATAN SECARA PERMANEN
+public function destroy($id)
+{
+    $kegiatan = Kegiatan::findOrFail($id);
+
+    // Hanya penyelenggara yang boleh menghapus
+    abort_unless($kegiatan->user_id == auth()->id(), 403);
+
+    $foto = $kegiatan->foto;
+
+    // Hapus data terkait dalam satu transaksi
+    DB::transaction(function () use ($kegiatan) {
+
+        // Hapus sertifikat kegiatan
+        DB::table('sertifikats')
+            ->where('kegiatan_id', $kegiatan->id)
+            ->delete();
+
+        // Hapus seluruh pesan Ruang Aksi kegiatan
+        DB::table('pesan_kegiatans')
+            ->where('kegiatan_id', $kegiatan->id)
+            ->delete();
+
+        // Hapus seluruh pendaftaran peserta
+        DB::table('peserta_kegiatans')
+            ->where('kegiatan_id', $kegiatan->id)
+            ->delete();
+
+        // Hapus kegiatan
+        $kegiatan->delete();
+    });
+
+    // Hapus foto kegiatan dari folder public/images/kegiatan
+    if ($foto && str_starts_with($foto, 'images/kegiatan/')) {
+        $pathFoto = public_path($foto);
+
+        if (File::exists($pathFoto)) {
+            File::delete($pathFoto);
+        }
+    }
+
+    return redirect()
+        ->route('kegiatan-saya')
+        ->with('success', 'Kegiatan dan seluruh data terkait berhasil dihapus permanen!');
+}
 }
